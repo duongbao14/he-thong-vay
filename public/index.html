@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Hồ Sơ Vay Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            /* Tông màu Cyber/Fintech dựa trên thiết kế */
+            --primary: #38bdf8; /* Cyan */
+            --primary-light: rgba(56, 189, 248, 0.15);
+            --accent: #38bdf8;
+            --success: #10b981; /* Green */
+            --danger: #ef4444;
+            --purple: #d946ef;
+            --bg-body: linear-gradient(135deg, #18113c 0%, #083c48 100%);
+            --card-bg: #1e2430; /* App container */
+            --card-surface: #262e3d; /* Inner cards */
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --btn-cam-bg: linear-gradient(135deg, #38bdf8, #2563eb);
+            --btn-file-bg: #262e3d;
+            --btn-submit-bg: linear-gradient(135deg, #38bdf8, #0284c7);
+            --btn-submit-glow: rgba(56, 189, 248, 0.25);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background: var(--bg-body);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            padding: 20px 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-container {
+            background: var(--card-bg);
+            border: 1px solid #2e3846;
+            border-radius: 28px;
+            padding: 20px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+        }
+
+        .top-navbar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #171b25; border: 1px solid var(--card-border);
+            padding: 10px 14px; border-radius: 20px; margin-bottom: 16px;
+        }
+
+        .user-badge { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; }
+        .avatar-circle {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #d946ef, #8b5cf6);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: bold; color: #fff;
+            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-nav {
+            padding: 8px 14px; border-radius: 12px; font-size: 11px; font-weight: 700;
+            border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-logout { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2); }
+        .btn-manage { background: linear-gradient(135deg, #38bdf8, #0284c7); color: #fff; box-shadow: 0 4px 10px rgba(56, 189, 248, 0.2); }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #2a2856, #322b6d);
+            border: 1px solid #4a4580; border-radius: 20px;
+            padding: 18px; text-align: center; margin-bottom: 16px;
+        }
+        .welcome-card .title { font-size: 18px; font-weight: 800; margin-bottom: 4px; cursor: pointer; user-select: none; color: #fff; }
+        .welcome-card .subtitle { font-size: 11px; color: #cbd5e1; margin-bottom: 12px; }
+
+        .link-group { display: flex; gap: 10px; }
+        .btn-link {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px; border-radius: 12px; text-decoration: none; font-weight: 700;
+            font-size: 11px; color: #fff; border: none;
+            transition: transform 0.2s;
+        }
+        .btn-link:hover { transform: translateY(-2px); }
+        .btn-zalo { background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
+        .btn-facebook { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+
+        .section-header {
+            font-size: 11px; font-weight: 800; color: var(--cyan);
+            text-transform: uppercase; letter-spacing: 0.5px; margin: 20px 0 12px 0;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .menu-grid { display: flex; flex-direction: column; gap: 10px; }
+        .menu-card {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 14px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .menu-card:hover { border-color: var(--primary); background: rgba(56,189,248,0.05); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(56,189,248,0.1); }
+        .menu-card .icon-box {
+            width: 44px; height: 44px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff;
+        }
+
+        .calc-box { margin-top: 10px; padding: 0 8px; }
+        
+        .range-slider {
+            width: 100%; height: 6px; border-radius: 4px; background: #334155;
+            outline: none; margin: 8px 0 20px 0; accent-color: var(--primary); cursor: pointer;
+            -webkit-appearance: none;
+        }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--primary); cursor: pointer;
+            border: 3px solid #fff;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .step-item { background: var(--card-surface); border-radius: 12px; padding: 12px 8px; text-align: center; }
+        .step-icon {
+            width: 28px; height: 28px; border-radius: 50%; color: #fff;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 11px; font-weight: bold;
+        }
+
+        .faq-item { background: transparent; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; font-size: 12px; cursor: pointer; }
+        .faq-question { font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
+        .faq-answer { font-size: 11px; color: var(--text-muted); margin-top: 8px; display: none; line-height: 1.5; }
+
+        .form-screen, .account-mgr-screen { display: none; animation: fadeIn 0.3s ease-out forwards; }
+        
+        .btn-back {
+            background: var(--card-surface); color: #f8fafc; border: 1px solid var(--card-border);
+            padding: 8px 14px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 11px; margin-bottom: 16px;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-back:hover { background: #334155; }
+
+        .form-section-title {
+            font-size: 11px; font-weight: 800; color: var(--primary); margin: 16px 0 10px 0;
+            border-bottom: 1px solid var(--card-border); padding-bottom: 6px; text-transform: uppercase;
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .full-width { grid-column: span 2; }
+
+        label { font-size: 11px; display: block; margin-top: 4px; color: var(--text-main); font-weight: 600; }
+        
+        input[type="text"], input[type="password"], input[type="tel"], input[type="url"], select {
+            width: 100%; padding: 10px 12px; margin-top: 4px; border: 1px solid var(--card-border);
+            border-radius: 10px; background: transparent; color: #f8fafc; font-size: 12px; outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        /* Custom arrow for select fields */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f8fafc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 36px;
+        }
+        select option { background: var(--card-bg); color: #fff; }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 6px rgba(56, 189, 248, 0.25); }
+
+        /* NỔI BẬT KHUNG MỨC GÓP HÀNG THÁNG */
+        .highlight-monthly-box {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border: 2px solid var(--success) !important;
+            color: var(--success) !important;
+            font-size: 20px !important;
+            font-weight: 900 !important;
+            text-align: center !important;
+            padding: 14px !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            letter-spacing: 1px;
+        }
+
+        .terms-container {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .term-item { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none; }
+        .term-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+        .term-text { font-size: 11px; line-height: 1.5; color: #cbd5e1; }
+        .term-warning { color: #fbbf24; font-weight: 700; }
+
+        input.input-error, select.input-error { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.1) !important; }
+        .error-msg { color: #f87171; font-size: 10px; font-weight: 600; margin-top: 4px; display: none; }
+
+        .img-input-group { border: 1.5px dashed var(--card-border); padding: 16px; border-radius: 14px; background: transparent; margin-top: 6px; text-align: center; }
+        .action-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; justify-content: center; }
+        
+        .btn-act { width: 100%; padding: 12px; font-size: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        .btn-act:hover { transform: translateY(-2px); }
+        .btn-file { background: var(--btn-file-bg); color: #f8fafc; border: 1px solid var(--card-border); }
+        .btn-cam { background: var(--btn-cam-bg); box-shadow: 0 4px 10px rgba(56, 189, 248, 0.2); }
+        
+        .preview-img { width: 100%; max-height: 220px; margin-bottom: 8px; border-radius: 10px; display: none; object-fit: cover; border: 1px solid var(--card-border); }
+
+        button[type="submit"] {
+            width: 100%; background: var(--btn-submit-bg); color: #fff;
+            border: none; padding: 14px; margin-top: 20px; border-radius: 12px; font-weight: 800;
+            font-size: 14px; cursor: pointer; box-shadow: 0 4px 16px var(--btn-submit-glow); transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+        button[type="submit"]:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4); }
+        button[type="submit"]:disabled { background: #334155 !important; color: #94a3b8 !important; box-shadow: none !important; cursor: not-allowed; opacity: 0.8; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px);
+            display: none; justify-content: center; align-items: center; z-index: 999;
+        }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; width: 90%; max-width: 340px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+
+        .user-list-item { display: flex; justify-content: space-between; align-items: center; background: #171b25; padding: 10px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 11px; border: 1px solid var(--card-border); }
+
+        #status { margin-top: 14px; text-align: center; font-weight: 700; font-size: 12px; }
+        @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- TOP NAVBAR -->
+    <div class="top-navbar">
+        <div class="user-badge">
+            <div class="avatar-circle" id="userAvatar"><i class="fa-solid fa-user"></i></div>
+            <div>
+                <div id="currentUserLabel" style="color: #f8fafc;">Khách Hàng</div>
+                <div id="currentRoleDesc" style="font-size: 9px; color: var(--text-muted);">Đăng ký công khai</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 6px;">
+            <button type="button" id="btnManageAcc" class="btn-nav btn-manage" style="display: none;" onclick="openAccountManager()">
+                <i class="fa-solid fa-users-gear"></i> Quản lý
+            </button>
+            <button type="button" id="btnLogoutBtn" class="btn-nav btn-logout" style="display: none;" onclick="logoutAdmin()">
+                <i class="fa-solid fa-right-from-bracket"></i> Thoát
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL ĐĂNG NHẬP ADMIN -->
+    <div id="passwordModal" class="modal-overlay">
+        <div class="modal-box">
+            <i class="fa-solid fa-user-shield" style="font-size: 32px; color: var(--primary); margin-bottom: 10px;"></i>
+            <h3 style="font-size: 15px; margin-bottom: 12px; color: #f8fafc;">Đăng Nhập Quản Trị</h3>
+            <div style="display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 14px;">
+                <input type="text" id="adminUser" placeholder="Tên đăng nhập...">
+                <input type="password" id="adminPassword" placeholder="Mật khẩu...">
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn-act btn-file" onclick="closeLoginModal()">Hủy</button>
+                <button type="button" class="btn-act btn-cam" onclick="verifyAdminLogin()">Đăng Nhập</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboardScreen">
+        <div class="welcome-card">
+            <h2 class="title" id="secretTriggerTitle">Hệ Thống Hồ Sơ Vay L88</h2>
+            <p class="subtitle">Duyệt tự động 24/7 - Giải ngân siêu tốc về thẻ Internet Banking</p>
+
+            <div class="link-group">
+                <a href="https://zalo.me/0343524564" target="_blank" class="btn-link btn-zalo">
+                    <i class="fa-solid fa-comment-dots"></i> Zalo: 0343524564
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61592985873649" target="_blank" class="btn-link btn-facebook">
+                    <i class="fa-brands fa-facebook-f"></i> Fanpage 
+                </a>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <i class="fa-solid fa-layer-group"></i> CHỌN DỊCH VỤ CẦN ĐĂNG KÝ
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-card" onclick="openForm('Trả Góp Máy')">
+                <div class="icon-box" style="background: linear-gradient(135deg, #38bdf8, #0284c7);">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-size: 14px; font-weight: 700; color: #f8fafc;">Trả Góp Máy</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top:2px;">Hỗ trợ iPhone thủ tục nhanh chóng</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
+            </div>
+
+            <div class="menu-card" onclick="openForm('Vay Tiêu Dùng')">
+                <div class="icon-box" style="background: linear-gradient(135deg, #34d399, #059669);">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-size: 14px; font-weight: 700; color: #f8fafc;">Vay Tiêu Dùng</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top:2px;">Hạn mức linh hoạt từ 2tr - 15tr VNĐ</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <i class="fa-solid fa-calculator"></i> TÍNH THỬ KHOẢN VAY HÀNG THÁNG
+        </div>
+        <div class="calc-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--text-main);">Số tiền vay:</span>
+                <span id="calcAmountLabel" style="color: var(--primary); font-size: 15px; font-weight: 800;">5.000.000 VNĐ</span>
+            </div>
+            <input type="range" min="2000000" max="15000000" step="500000" value="5000000" class="range-slider" id="calcAmountRange">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--text-main);">Thời hạn:</span>
+                <span id="calcTermLabel" style="color: var(--purple); font-size: 15px; font-weight: 800;">3 Tháng</span>
+            </div>
+            <input type="range" min="2" max="6" step="1" value="3" class="range-slider" id="calcTermRange">
+
+            <div style="border-top: 1px dashed var(--card-border); padding-top: 16px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Mức góp mỗi tháng:</span>
+                <span id="calcMonthlyResult" style="color: var(--success); font-size: 18px; font-weight: 800;">2.066.667 VNĐ</span>
+            </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 24px;">
+            <i class="fa-solid fa-list-check"></i> QUY TRÌNH ĐĂNG KÝ ĐƠN GIẢN
+        </div>
+        <div class="steps-grid">
+            <div class="step-item">
+                <div class="step-icon" style="background: linear-gradient(135deg, #a855f7, #6d28d9);">1</div>
+                <div style="font-size: 11px; font-weight: 700; color: #f8fafc;">Điền thông tin</div>
+                <div style="font-size: 9px; color: var(--text-muted); margin-top:4px;">Chưa đầy 2 phút</div>
+            </div>
+            <div class="step-item">
+                <div class="step-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">2</div>
+                <div style="font-size: 11px; font-weight: 700; color: #f8fafc;">Thẩm định nhanh</div>
+                <div style="font-size: 9px; color: var(--text-muted); margin-top:4px;">Hệ thống tự động</div>
+            </div>
+            <div class="step-item">
+                <div class="step-icon" style="background: linear-gradient(135deg, #10b981, #059669);">3</div>
+                <div style="font-size: 11px; font-weight: 700; color: #f8fafc;">Nhận tiền ngay</div>
+                <div style="font-size: 9px; color: var(--text-muted); margin-top:4px;">Chuyển khoản ATM</div>
+            </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 24px;">
+            <i class="fa-solid fa-circle-question"></i> CÂU HỎI THƯỜNG GẶP
+        </div>
+        
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Đăng ký hồ sơ cần chuẩn bị gì? <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></div>
+            <div class="faq-answer">Bạn chỉ cần chuẩn bị CCCD chính chủ và chụp ảnh chân dung trực tiếp trên hệ thống là có thể đăng ký.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Bao lâu thì nhận được tiền giải ngân? <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></div>
+            <div class="faq-answer">Sau khi điền đủ thông tin, hệ thống kiểm tra và giải ngân vào tài khoản ngân hàng của bạn từ 5 - 15 phút.</div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH QUẢN LÝ ADMIN -->
+    <div id="accountMgrScreen" class="account-mgr-screen">
+        <button class="btn-back" onclick="closeAccountManager()"><i class="fa-solid fa-arrow-left"></i> Quay lại Dashboard</button>
+        <h2 style="font-size: 15px; color: #f8fafc; margin-bottom: 12px;"><i class="fa-solid fa-users-gear" style="color: var(--primary);"></i> QUẢN LÝ TÀI KHOẢN ADMIN</h2>
+        
+        <div style="background: transparent; padding: 12px; border-radius: 12px; border: 1px solid var(--card-border); margin-bottom: 12px;">
+            <div style="font-size: 11px; font-weight: 700; margin-bottom: 8px; color: var(--primary);">+ Tạo Tài Khoản Mới</div>
+            <input type="text" id="newAccUser" placeholder="Tên đăng nhập" style="margin-bottom:6px;">
+            <input type="password" id="newAccPass" placeholder="Mật khẩu bí mật" style="margin-bottom:6px;">
+            <select id="newAccRole" style="margin-bottom:12px;">
+                <option value="admin">Admin / Nhân viên</option>
+                <option value="superadmin">Super Admin</option>
+            </select>
+            <button type="button" class="btn-act btn-submit" style="width:100%;" onclick="createNewAccount()">TẠO TÀI KHOẢN</button>
+        </div>
+
+        <div style="font-size: 11px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted);">Danh Sách Tài Khoản:</div>
+        <div id="userListContainer"></div>
+    </div>
+
+    <!-- FORM HỒ SƠ CHÍNH -->
+    <div id="formScreen" class="form-screen">
+        <button class="btn-back" onclick="showDashboard()"><i class="fa-solid fa-arrow-left"></i> Quay lại Dashboard</button>
+        <h2 id="formTitle" style="font-size: 14px; text-align: center; margin-bottom: 16px; color: #f8fafc; font-weight: 800;">HỒ SƠ KHÁCH HÀNG</h2>
+        
+        <form id="telegramForm" novalidate>
+            <div class="form-section-title">THÔNG TIN KHÁCH HÀNG</div>
+            <div class="grid">
+                <div><label>Họ và tên:</label><input type="text" id="fullname" class="req-field" placeholder="Họ và tên"></div>
+                <div><label>Máy chủ (Không tự điền):</label><input type="text" id="server" placeholder="Máy chủ"></div>
+                
+                <div>
+                    <label>Số điện thoại:</label>
+                    <input type="tel" id="phone" class="req-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                    <div class="error-msg" id="error-phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
+                </div>
+                
+                <div>
+                    <label>SĐT Zalo:</label>
+                    <input type="tel" id="zalo_phone" class="req-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                    <div class="error-msg" id="error-zalo_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
+                </div>
+
+                <div class="full-width"><label>Nghề nghiệp:</label><input type="text" id="job" class="req-field" placeholder="Công việc hiện tại"></div>
+                <div class="full-width"><label>Địa chỉ hiện tại:</label><input type="text" id="address" class="req-field" placeholder="Địa chỉ chi tiết"></div>
+                <div class="full-width"><label>Link FB khách hàng:</label><input type="url" id="fb_kh" class="req-field" placeholder="https://www.facebook.com/..."></div>
+            </div>
+
+            <div class="form-section-title">THÔNG TIN NGƯỜI THÂN</div>
+            <div class="grid">
+                <div><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
+                
+                <div>
+                    <label>SDT người thân:</label>
+                    <input type="tel" id="parent_phone" class="req-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                    <div class="error-msg" id="error-parent_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
+                </div>
+
+                <div class="full-width"><label>Link FB người thân 1:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
+                <div class="full-width"><label>Link FB người thân 2:</label><input type="url" id="fb_nt2" class="req-field" placeholder="https://www.facebook.com/..."></div>
+            </div>
+
+            <div class="form-section-title">THÔNG TIN THIẾT BỊ & KHOẢN VAY</div>
+            <div class="grid">
+                <div>
+                    <label>Loại máy:</label>
+                    <select id="device_type" class="req-field" onchange="updateStorageOptions()">
+                        <option value="" disabled selected>-- Chọn dòng máy --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Dung lượng máy:</label>
+                    <select id="device_storage" class="req-field">
+                        <option value="" disabled selected>-- Chọn dung lượng --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>IMEI 1:</label>
+                    <input type="tel" id="imei1" class="req-field imei-input" maxlength="15" placeholder="Nhập đúng 15 số IMEI">
+                    <div class="error-msg" id="error-imei1">⚠️ IMEI 1 phải chứa đúng 15 chữ số.</div>
+                </div>
+                
+                <div>
+                    <label>IMEI 2:</label>
+                    <input type="tel" id="imei2" class="req-field imei-input" maxlength="15" placeholder="Nhập đúng 15 số IMEI">
+                    <div class="error-msg" id="error-imei2">⚠️ IMEI 2 phải chứa đúng 15 chữ số.</div>
+                </div>
+
+                <div>
+                    <label>Seri máy:</label>
+                    <input type="text" id="seri" class="req-field" placeholder="VÍ DỤ: F2L..." style="text-transform: uppercase;">
+                </div>
+
+                <!-- Phân đoạn động cho phần Trả góp -->
+                <div id="wrapper_device_value" style="display: none;">
+                    <label>Giá trị máy mua (VNĐ):</label>
+                    <input type="text" id="device_value" class="installment-field money-input" placeholder="Ví dụ: 25.000.000" oninput="calculateLoanAmount()">
+                </div>
+                
+                <div id="wrapper_prepaid_amount" style="display: none;">
+                    <label>Số tiền trả trước (VNĐ):</label>
+                    <input type="text" id="prepaid_amount" class="installment-field money-input" placeholder="Ví dụ: 10.000.000" oninput="calculateLoanAmount()">
+                </div>
+                <!-- End Phân đoạn động -->
+                
+                <div>
+                    <label>Số tiền vay:</label>
+                    <!-- Sẽ hiển thị thẻ select khi Vay Tiêu Dùng -->
+                    <select id="loan_amount_select" class="req-field" onchange="calculateMonthlyPayment()">
+                        <option value="" disabled selected>-- Chọn số tiền --</option>
+                    </select>
+                    <!-- Sẽ hiển thị thẻ input khi Trả Góp Máy -->
+                    <input type="text" id="loan_amount_input" readonly placeholder="Số tiền vay (Tự tính)" style="display: none; background: #171b25; color: var(--primary); font-weight: bold;">
+                </div>
+
+                <div>
+                    <label>Thời gian vay:</label>
+                    <select id="loan_term" class="req-field" onchange="calculateMonthlyPayment()">
+                        <option value="" disabled selected>-- Chọn thời gian --</option>
+                        <option value="2">2 tháng</option>
+                        <option value="3">3 tháng</option>
+                        <option value="4">4 tháng</option>
+                        <option value="5">5 tháng</option>
+                        <option value="6">6 tháng</option>
+                    </select>
+                </div>
+
+                <div class="full-width">
+                    <label style="color: var(--success); font-weight: 800; font-size: 12px; margin-bottom: 6px;">MỨC GÓP HÀNG THÁNG:</label>
+                    <input type="text" id="monthly_payment" class="highlight-monthly-box" readonly placeholder="--- 0 VNĐ ---">
+                </div>
+
+                <div class="full-width" id="wrapper_staff">
+                    <label>Nhân viên cài (Không tự điền) :</label>
+                    <input type="text" id="staff" class="text-only-input" placeholder="Tên nhân viên (Chỉ điền chữ)">
+                    <div class="error-msg" id="error-staff">⚠️ Họ tên nhân viên chỉ bao gồm chữ cái.</div>
+                </div>
+            </div>
+
+            <!-- THÔNG TIN CỬA HÀNG -->
+            <div id="store_info_section">
+                <div class="form-section-title">THÔNG TIN CỬA HÀNG</div>
+                <div class="grid">
+                    <div>
+                        <label>Tên cửa hàng:</label>
+                        <input type="text" id="store_name" class="req-field store-field" placeholder="Tên cửa hàng">
+                    </div>
+
+                    <div>
+                        <label>Số điện thoại cửa hàng:</label>
+                        <input type="tel" id="store_phone" class="req-field store-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                        <div class="error-msg" id="error-store_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
+                    </div>
+
+                    <div class="full-width">
+                        <label>Địa chỉ cửa hàng:</label>
+                        <input type="text" id="store_address" class="req-field store-field" placeholder="Địa chỉ chi tiết cửa hàng">
+                    </div>
+                </div>
+            </div>
+
+            <!-- HÌNH ẢNH HỒ SƠ -->
+            <div class="form-section-title">HÌNH ẢNH HỒ SƠ</div>
+            
+            <label>1. Ảnh CCCD Mặt Trước <span class="req-field" style="color:#f87171">*</span></label>
+            <div class="img-input-group" id="group-cccd_front" tabindex="0">
+                <div class="paste-hint admin-only" style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">📋 Click & <b>Ctrl + V</b> để dán ảnh</div>
+                <img id="preview-cccd_front" class="preview-img" alt="CCCD Mặt Trước">
+                
+                <input type="file" id="cam-cccd_front" accept="image/*" capture="environment" style="display:none;" onchange="handleNativeCapture('cccd_front', this)">
+                <input type="file" id="file-cccd_front" accept="image/*" style="display:none;" onchange="handleNativeCapture('cccd_front', this)">
+
+                <div class="action-btns">
+                    <button type="button" class="btn-act btn-cam" id="btn-cam-cccd_front" onclick="triggerCamera('cam-cccd_front')">
+                        <i class="fa-solid fa-camera"></i> <span id="label-cccd_front">Mở Camera iPhone</span>
+                    </button>
+                    <button type="button" class="btn-act btn-file admin-only" onclick="document.getElementById('file-cccd_front').click()">
+                        <i class="fa-solid fa-folder-open"></i> Thư viện
+                    </button>
+                </div>
+            </div>
+
+            <label>2. Ảnh CCCD Mặt Sau <span class="req-field" style="color:#f87171">*</span></label>
+            <div class="img-input-group" id="group-cccd_back" tabindex="0">
+                <div class="paste-hint admin-only" style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">📋 Click & <b>Ctrl + V</b> để dán ảnh</div>
+                <img id="preview-cccd_back" class="preview-img" alt="CCCD Mặt Sau">
+                
+                <input type="file" id="cam-cccd_back" accept="image/*" capture="environment" style="display:none;" onchange="handleNativeCapture('cccd_back', this)">
+                <input type="file" id="file-cccd_back" accept="image/*" style="display:none;" onchange="handleNativeCapture('cccd_back', this)">
+
+                <div class="action-btns">
+                    <button type="button" class="btn-act btn-cam" id="btn-cam-cccd_back" onclick="triggerCamera('cam-cccd_back')">
+                        <i class="fa-solid fa-camera"></i> <span id="label-cccd_back">Mở Camera iPhone</span>
+                    </button>
+                    <button type="button" class="btn-act btn-file admin-only" onclick="document.getElementById('file-cccd_back').click()">
+                        <i class="fa-solid fa-folder-open"></i> Thư viện
+                    </button>
+                </div>
+            </div>
+
+            <label>3. Ảnh Chân Dung <span class="req-field" style="color:#f87171">*</span></label>
+            <div class="img-input-group" id="group-portrait" tabindex="0">
+                <div class="paste-hint admin-only" style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">📋 Click & <b>Ctrl + V</b> để dán ảnh</div>
+                <img id="preview-portrait" class="preview-img" alt="Ảnh Chân Dung">
+                
+                <input type="file" id="cam-portrait" accept="image/*" capture="user" style="display:none;" onchange="handleNativeCapture('portrait', this)">
+                <input type="file" id="file-portrait" accept="image/*" style="display:none;" onchange="handleNativeCapture('portrait', this)">
+
+                <div class="action-btns">
+                    <button type="button" class="btn-act btn-cam" id="btn-cam-portrait" onclick="triggerCamera('cam-portrait')">
+                        <i class="fa-solid fa-circle-user"></i> <span id="label-portrait">Mở Cam Trước Selfie</span>
+                    </button>
+                    <button type="button" class="btn-act btn-file admin-only" onclick="document.getElementById('file-portrait').click()">
+                        <i class="fa-solid fa-folder-open"></i> Thư viện
+                    </button>
+                </div>
+            </div>
+
+            <!-- MỤC ĐIỀU KHOẢN -->
+            <div class="terms-container">
+                <label class="term-item">
+                    <input type="checkbox" id="term1" onchange="toggleSubmitButton()">
+                    <span class="term-text">Tôi đã hiểu và đồng ý với hợp đồng trả góp</span>
+                </label>
+                <label class="term-item">
+                    <input type="checkbox" id="term2" onchange="toggleSubmitButton()">
+                    <span class="term-text term-warning">Chú ý: Quý khách vui lòng kiểm tra kỹ thông tin hợp đồng, nếu có sai lệch thông tin quý khách vui lòng làm lại hồ sơ như đã thỏa thuận ban đầu!</span>
+                </label>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled><i class="fa-solid fa-paper-plane"></i> GỬI HỒ SƠ VÀ CHỜ DUYỆT</button>
+        </form>
+        <div id="status"></div>
+    </div>
+
+</div>
+
+<script>
+    let currentCategory = '';
+    let currentAccount = null;
+    const imagesData = { cccd_front: null, cccd_back: null, portrait: null };
+
+    // Cập nhật đầy đủ các dòng máy từ 11 đến 17 Series và dung lượng
+    const deviceData = {
+        "iPhone 17 Pro Max": ["256GB", "512GB", "1TB", "2TB"],
+        "iPhone 17 Pro": ["256GB", "512GB", "1TB", "2TB"],
+        "iPhone 17 Plus": ["128GB", "256GB", "512GB"],
+        "iPhone 17": ["128GB", "256GB", "512GB"],
+        "iPhone 16 Pro Max": ["256GB", "512GB", "1TB", "2TB"],
+        "iPhone 16 Pro": ["128GB", "256GB", "512GB", "1TB", "2TB"],
+        "iPhone 16 Plus": ["128GB", "256GB", "512GB"],
+        "iPhone 16": ["128GB", "256GB", "512GB"],
+        "iPhone 15 Pro Max": ["256GB", "512GB", "1TB"],
+        "iPhone 15 Pro": ["128GB", "256GB", "512GB", "1TB"],
+        "iPhone 15 Plus": ["128GB", "256GB", "512GB"],
+        "iPhone 15": ["128GB", "256GB", "512GB"],
+        "iPhone 14 Pro Max": ["128GB", "256GB", "512GB", "1TB"],
+        "iPhone 14 Pro": ["128GB", "256GB", "512GB", "1TB"],
+        "iPhone 14 Plus": ["128GB", "256GB", "512GB"],
+        "iPhone 14": ["128GB", "256GB", "512GB"],
+        "iPhone 13 Pro Max": ["128GB", "256GB", "512GB", "1TB"],
+        "iPhone 13 Pro": ["128GB", "256GB", "512GB", "1TB"],
+        "iPhone 13": ["128GB", "256GB", "512GB"],
+        "iPhone 13 mini": ["128GB", "256GB", "512GB"],
+        "iPhone 12 Pro Max": ["128GB", "256GB", "512GB"],
+        "iPhone 12 Pro": ["128GB", "256GB", "512GB"],
+        "iPhone 12": ["64GB", "128GB", "256GB"],
+        "iPhone 12 mini": ["64GB", "128GB", "256GB"],
+        "iPhone 11 Pro Max": ["64GB", "256GB", "512GB"],
+        "iPhone 11 Pro": ["64GB", "256GB", "512GB"],
+        "iPhone 11": ["64GB", "128GB", "256GB"],
+        "Khác / Khác dòng": ["32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB"]
+    };
+
+    function initDeviceDropdowns() {
+        const typeSelect = document.getElementById('device_type');
+        typeSelect.innerHTML = '<option value="" disabled selected>-- Chọn dòng máy --</option>';
+        for (let device in deviceData) {
+            const opt = document.createElement('option');
+            opt.value = device;
+            opt.textContent = device;
+            typeSelect.appendChild(opt);
+        }
+    }
+
+    function updateStorageOptions() {
+        const typeSelect = document.getElementById('device_type');
+        const storageSelect = document.getElementById('device_storage');
+        const selectedDevice = typeSelect.value;
+        storageSelect.innerHTML = '<option value="" disabled selected>-- Chọn dung lượng --</option>';
+        if (selectedDevice && deviceData[selectedDevice]) {
+            deviceData[selectedDevice].forEach(storage => {
+                const opt = document.createElement('option');
+                opt.value = storage;
+                opt.textContent = storage;
+                storageSelect.appendChild(opt);
+            });
+        }
+    }
+
+    function encodeSecret(str) { return btoa(str.split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ (i % 5 + 1))).join('')); }
+    function decodeSecret(str) { try { return atob(str).split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ (i % 5 + 1))).join(''); } catch(e) { return ''; } }
+
+    function toggleFaq(el) {
+        const ans = el.querySelector('.faq-answer');
+        const icon = el.querySelector('i');
+        if (ans.style.display === 'block') {
+            ans.style.display = 'none';
+            icon.className = 'fa-solid fa-chevron-down';
+        } else {
+            ans.style.display = 'block';
+            icon.className = 'fa-solid fa-chevron-up';
+        }
+    }
+
+    function formatCurrencyWithDots(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function updateQuickCalc() {
+        const amtEl = document.getElementById('calcAmountRange');
+        const termEl = document.getElementById('calcTermRange');
+
+        if (!amtEl || !termEl) return;
+
+        const amt = parseInt(amtEl.value) || 5000000;
+        const term = parseInt(termEl.value) || 3;
+        
+        document.getElementById('calcAmountLabel').innerText = formatCurrencyWithDots(amt) + ' VNĐ';
+        document.getElementById('calcTermLabel').innerText = term + ' Tháng';
+
+        const totalRepay = amt + (amt * 0.08 * term);
+        const monthly = totalRepay / term;
+        document.getElementById('calcMonthlyResult').innerText = formatCurrencyWithDots(Math.round(monthly)) + ' VNĐ';
+    }
+
+    function bindCalcEvents() {
+        const amtRange = document.getElementById('calcAmountRange');
+        const termRange = document.getElementById('calcTermRange');
+
+        if(amtRange && termRange) {
+            ['input', 'change'].forEach(evt => {
+                amtRange.addEventListener(evt, updateQuickCalc);
+                termRange.addEventListener(evt, updateQuickCalc);
+            });
+        }
+    }
+
+    function toggleSubmitButton() {
+        const term1 = document.getElementById('term1').checked;
+        const term2 = document.getElementById('term2').checked;
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = !(term1 && term2);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+            e.preventDefault();
+            openLoginModal();
+        }
+    });
+
+    let clickCount = 0;
+    let clickTimer = null;
+    document.getElementById('secretTriggerTitle').addEventListener('click', function() {
+        clickCount++;
+        clearTimeout(clickTimer);
+        if (clickCount >= 5) {
+            clickCount = 0;
+            openLoginModal();
+        } else {
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+        }
+    });
+
+    function getSystemAccounts() {
+        const defaultAccounts = [{ username: 'admin', passEnc: encodeSecret('Kothenoidc1'), role: 'superadmin' }];
+        const saved = localStorage.getItem('sys_accounts');
+        return saved ? JSON.parse(saved) : defaultAccounts;
+    }
+
+    function saveSystemAccounts(accs) { localStorage.setItem('sys_accounts', JSON.stringify(accs)); }
+
+    function openLoginModal() {
+        document.getElementById('adminUser').value = '';
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('passwordModal').style.display = 'flex';
+    }
+
+    function closeLoginModal() { document.getElementById('passwordModal').style.display = 'none'; }
+
+    function verifyAdminLogin() {
+        const u = document.getElementById('adminUser').value.trim();
+        const p = document.getElementById('adminPassword').value.trim();
+        if(!u || !p) { alert('Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!'); return; }
+
+        const accs = getSystemAccounts();
+        const found = accs.find(a => a.username === u && decodeSecret(a.passEnc) === p);
+
+        if (found) {
+            currentAccount = { username: found.username, role: found.role };
+            closeLoginModal();
+            applyRolePermissions();
+            alert(`✅ Đăng nhập Admin thành công! Xin chào ${found.username}`);
+        } else {
+            alert('❌ Tên đăng nhập hoặc mật khẩu không chính xác!');
+        }
+    }
+
+    function logoutAdmin() {
+        currentAccount = null;
+        closeAccountManager();
+        applyRolePermissions();
+    }
+
+    function applyRolePermissions() {
+        const userLabel = document.getElementById('currentUserLabel');
+        const roleDesc = document.getElementById('currentRoleDesc');
+        const logoutBtn = document.getElementById('btnLogoutBtn');
+        const manageBtn = document.getElementById('btnManageAcc');
+        const avatar = document.getElementById('userAvatar');
+        const adminElements = document.querySelectorAll('.admin-only');
+        const reqFields = document.querySelectorAll('.req-field');
+
+        if (currentAccount) {
+            userLabel.innerText = currentAccount.username;
+            roleDesc.innerText = currentAccount.role === 'superadmin' ? 'Super Admin' : 'Admin';
+            avatar.innerText = currentAccount.username.charAt(0).toUpperCase();
+
+            logoutBtn.style.display = 'inline-flex';
+            manageBtn.style.display = (currentAccount.role === 'superadmin') ? 'inline-flex' : 'none';
+
+            adminElements.forEach(el => el.style.display = 'block');
+            reqFields.forEach(el => el.removeAttribute('required'));
+        } else {
+            userLabel.innerText = 'Khách Hàng';
+            roleDesc.innerText = 'Quyền đăng ký công khai';
+            avatar.innerHTML = '<i class="fa-solid fa-user"></i>';
+
+            logoutBtn.style.display = 'none';
+            manageBtn.style.display = 'none';
+
+            adminElements.forEach(el => el.style.display = 'none');
+            reqFields.forEach(el => el.setAttribute('required', 'required'));
+            
+            // Xóa bắt buộc điền của Máy chủ và Nhân viên
+            document.getElementById('server').removeAttribute('required');
+            document.getElementById('staff').removeAttribute('required');
+        }
+    }
+
+    function openAccountManager() {
+        if (!currentAccount || currentAccount.role !== 'superadmin') return;
+        document.getElementById('dashboardScreen').style.display = 'none';
+        document.getElementById('formScreen').style.display = 'none';
+        document.getElementById('accountMgrScreen').style.display = 'block';
+        renderUserList();
+    }
+
+    function closeAccountManager() {
+        document.getElementById('accountMgrScreen').style.display = 'none';
+        document.getElementById('dashboardScreen').style.display = 'block';
+    }
+
+    function renderUserList() {
+        const accs = getSystemAccounts();
+        const container = document.getElementById('userListContainer');
+        container.innerHTML = '';
+        accs.forEach((acc, index) => {
+            const item = document.createElement('div');
+            item.className = 'user-list-item';
+            item.innerHTML = `
+                <div><strong style="color:#f8fafc;">${acc.username}</strong> <span style="color:var(--primary);">(${acc.role.toUpperCase()})</span></div>
+                <div>${acc.role !== 'superadmin' ? `<button class="btn-act btn-logout" style="padding:2px 6px;" onclick="deleteAccount(${index})">Xóa</button>` : '<i>Gốc</i>'}</div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function createNewAccount() {
+        const u = document.getElementById('newAccUser').value.trim();
+        const p = document.getElementById('newAccPass').value.trim();
+        const r = document.getElementById('newAccRole').value;
+        if (!u || !p) return;
+        const accs = getSystemAccounts();
+        if (accs.some(a => a.username === u)) { alert('Tài khoản đã tồn tại!'); return; }
+        accs.push({ username: u, passEnc: encodeSecret(p), role: r });
+        saveSystemAccounts(accs);
+        renderUserList();
+        alert('Tạo tài khoản thành công!');
+    }
+
+    function deleteAccount(index) {
+        if (!confirm('Xóa tài khoản này?')) return;
+        const accs = getSystemAccounts();
+        accs.splice(index, 1);
+        saveSystemAccounts(accs);
+        renderUserList();
+    }
+
+    function initLoanOptions() {
+        const select = document.getElementById('loan_amount_select');
+        select.innerHTML = '<option value="" disabled selected>-- Chọn số tiền --</option>';
+        for (let amount = 2000000; amount <= 15000000; amount += 500000) {
+            const opt = document.createElement('option');
+            opt.value = amount;
+            const labelText = (amount / 1000000).toFixed(1).replace('.0', '') + 'tr';
+            opt.setAttribute('data-label', labelText);
+            opt.textContent = formatCurrencyWithDots(amount) + ' VNĐ';
+            select.appendChild(opt);
+        }
+    }
+
+    function openForm(categoryName) {
+        currentCategory = categoryName;
+        document.getElementById('formTitle').innerText = `HỒ SƠ: ${categoryName.toUpperCase()}`;
+        
+        const storeSection = document.getElementById('store_info_section');
+        const storeFields = document.querySelectorAll('.store-field');
+
+        const wrapperDV = document.getElementById('wrapper_device_value');
+        const wrapperPA = document.getElementById('wrapper_prepaid_amount');
+        const instFields = document.querySelectorAll('.installment-field');
+        
+        const loanSelect = document.getElementById('loan_amount_select');
+        const loanInput = document.getElementById('loan_amount_input');
+        
+        // Quản lý mục Nhân viên cài
+        const wrapperStaff = document.getElementById('wrapper_staff');
+        const staffInput = document.getElementById('staff');
+
+        if (categoryName === 'Vay Tiêu Dùng') {
+            storeSection.style.display = 'none';
+            storeFields.forEach(el => {
+                el.classList.remove('req-field');
+                el.value = '';
+            });
+
+            // Ẩn các trường tính toán trả góp
+            wrapperDV.style.display = 'none';
+            wrapperPA.style.display = 'none';
+            instFields.forEach(el => {
+                el.classList.remove('req-field');
+                el.value = '';
+            });
+
+            loanSelect.style.display = 'block';
+            loanSelect.classList.add('req-field');
+            loanInput.style.display = 'none';
+            loanInput.classList.remove('req-field');
+            
+            // Hiện Nhân viên cài
+            wrapperStaff.style.display = 'block';
+            
+        } else {
+            storeSection.style.display = 'block';
+            storeFields.forEach(el => el.classList.add('req-field'));
+
+            // Hiển thị các trường tính toán trả góp
+            wrapperDV.style.display = 'block';
+            wrapperPA.style.display = 'block';
+            instFields.forEach(el => {
+                el.classList.add('req-field');
+            });
+
+            loanSelect.style.display = 'none';
+            loanSelect.classList.remove('req-field');
+            loanSelect.value = '';
+            loanInput.style.display = 'block';
+            loanInput.classList.add('req-field');
+            
+            // Ẩn Nhân viên cài
+            wrapperStaff.style.display = 'none';
+            staffInput.value = '';
+        }
+
+        // Đặt lại các giá trị tính toán
+        loanInput.value = '';
+        loanInput.setAttribute('data-value', '0');
+        document.getElementById('monthly_payment').value = '';
+
+        applyRolePermissions();
+        document.getElementById('dashboardScreen').style.display = 'none';
+        document.getElementById('formScreen').style.display = 'block';
+    }
+
+    function showDashboard() {
+        document.getElementById('formScreen').style.display = 'none';
+        document.getElementById('dashboardScreen').style.display = 'block';
+    }
+
+    // Hàm format số thành tiền chuẩn (dấu chấm)
+    document.querySelectorAll('.money-input').forEach(input => {
+        input.addEventListener('input', function() {
+            let val = this.value.replace(/\D/g, '');
+            if(val) {
+                this.value = formatCurrencyWithDots(parseInt(val, 10));
+            } else {
+                this.value = '';
+            }
+        });
+    });
+
+    // Hàm tính Số tiền vay (Chỉ áp dụng ở form Trả Góp)
+    function calculateLoanAmount() {
+        if (currentCategory !== 'Trả Góp Máy') return;
+        const dvInput = document.getElementById('device_value');
+        const paInput = document.getElementById('prepaid_amount');
+        
+        let dvStr = dvInput.value.replace(/\D/g, '');
+        let paStr = paInput.value.replace(/\D/g, '');
+
+        const dv = parseInt(dvStr) || 0;
+        const pa = parseInt(paStr) || 0;
+        
+        const loan = Math.max(0, dv - pa);
+        
+        const loanInput = document.getElementById('loan_amount_input');
+        if (dv > 0) {
+            loanInput.value = formatCurrencyWithDots(loan) + ' VNĐ';
+            loanInput.setAttribute('data-value', loan);
+        } else {
+            loanInput.value = '';
+            loanInput.setAttribute('data-value', '0');
+        }
+        
+        calculateMonthlyPayment();
+    }
+
+    // Cập nhật hàm tính Số tiền đóng mỗi tháng
+    function calculateMonthlyPayment() {
+        let amount = 0;
+        
+        if (currentCategory === 'Trả Góp Máy') {
+            amount = parseInt(document.getElementById('loan_amount_input').getAttribute('data-value')) || 0;
+        } else {
+            amount = parseFloat(document.getElementById('loan_amount_select').value) || 0;
+        }
+
+        const months = parseInt(document.getElementById('loan_term').value);
+        const monthlyInput = document.getElementById('monthly_payment');
+
+        if (amount > 0 && months) {
+            const monthlyPayment = (amount + (amount * 0.08 * months)) / months;
+            monthlyInput.value = formatCurrencyWithDots(Math.round(monthlyPayment)) + ' VNĐ';
+        } else { 
+            monthlyInput.value = ''; 
+        }
+    }
+
+    document.getElementById('seri').addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+
+    document.querySelectorAll('.text-only-input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, '');
+        });
+    });
+
+    function validatePhoneInput(inputEl) {
+        if (currentCategory === 'Vay Tiêu Dùng' && inputEl.classList.contains('store-field')) {
+            inputEl.classList.remove('input-error');
+            const errEl = document.getElementById(`error-${inputEl.id}`);
+            if (errEl) errEl.style.display = 'none';
+            return true;
+        }
+
+        const val = inputEl.value.trim();
+        const errEl = document.getElementById(`error-${inputEl.id}`);
+        const phoneRegex = /^0\d{9}$/;
+
+        if (currentAccount && val === '') {
+            inputEl.classList.remove('input-error');
+            if (errEl) errEl.style.display = 'none';
+            return true;
+        }
+
+        if (!phoneRegex.test(val)) {
+            inputEl.classList.add('input-error');
+            if (errEl) errEl.style.display = 'block';
+            return false;
+        } else {
+            inputEl.classList.remove('input-error');
+            if (errEl) errEl.style.display = 'none';
+            return true;
+        }
+    }
+
+    document.querySelectorAll('.phone-input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            validatePhoneInput(this);
+        });
+        input.addEventListener('blur', function() {
+            validatePhoneInput(this);
+        });
+    });
+
+    function validateImeiInput(inputEl) {
+        const val = inputEl.value.trim();
+        const errEl = document.getElementById(`error-${inputEl.id}`);
+        const imeiRegex = /^\d{15}$/;
+
+        if (currentAccount && val === '') {
+            inputEl.classList.remove('input-error');
+            if (errEl) errEl.style.display = 'none';
+            return true;
+        }
+
+        if (!imeiRegex.test(val)) {
+            inputEl.classList.add('input-error');
+            if (errEl) errEl.style.display = 'block';
+            return false;
+        } else {
+            inputEl.classList.remove('input-error');
+            if (errEl) errEl.style.display = 'none';
+            return true;
+        }
+    }
+
+    document.querySelectorAll('.imei-input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            validateImeiInput(this);
+        });
+        input.addEventListener('blur', function() {
+            validateImeiInput(this);
+        });
+    });
+
+    // Hàm kiểm tra thiết bị di động
+    function isMobileDevice() {
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (!isMobile && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) {
+            isMobile = true; 
+        }
+        return isMobile;
+    }
+
+    // Hàm gọi Camera kèm theo chặn PC
+    function triggerCamera(inputId) {
+        if (!isMobileDevice() && !currentAccount) {
+            alert('⚠️ TÍNH NĂNG BỊ KHÓA TRÊN MÁY TÍNH!\n\nĐể đảm bảo tính xác thực, vui lòng dùng ĐIỆN THOẠI truy cập vào trang web để chụp ảnh trực tiếp.');
+            return;
+        }
+        document.getElementById(inputId).click();
+    }
+
+    function handleNativeCapture(type, inputEl) {
+        const file = inputEl.files[0];
+        if (file) {
+            imagesData[type] = file;
+            const preview = document.getElementById(`preview-${type}`);
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+
+            const labelSpan = document.getElementById(`label-${type}`);
+            if (labelSpan) labelSpan.innerText = '🔄 Chụp lại ảnh khác';
+        }
+    }
+
+    ['cccd_front', 'cccd_back', 'portrait'].forEach(type => {
+        document.getElementById(`group-${type}`).addEventListener('paste', function(e) {
+            if (!currentAccount) return;
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const blob = item.getAsFile();
+                    imagesData[type] = blob;
+                    const preview = document.getElementById(`preview-${type}`);
+                    preview.src = URL.createObjectURL(blob);
+                    preview.style.display = 'block';
+                    break;
+                }
+            }
+        });
+    });
+
+    document.getElementById('telegramForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const statusDiv = document.getElementById('status');
+        
+        let isPhoneValid = true;
+        let firstErrInput = null;
+
+        document.querySelectorAll('.phone-input').forEach(input => {
+            const isValid = validatePhoneInput(input);
+            if (!isValid && !firstErrInput) {
+                isPhoneValid = false;
+                firstErrInput = input;
+            }
+        });
+
+        let isImeiValid = true;
+        document.querySelectorAll('.imei-input').forEach(input => {
+            const isValid = validateImeiInput(input);
+            if (!isValid && !firstErrInput) {
+                isImeiValid = false;
+                firstErrInput = input;
+            }
+        });
+
+        if (!isPhoneValid || !isImeiValid) {
+            alert('❌ Vui lòng kiểm tra lại các thông tin bị lỗi viền đỏ (Số điện thoại / IMEI)!');
+            statusDiv.style.color = '#f87171';
+            statusDiv.innerText = '❌ Vui lòng kiểm tra lại các thông tin bị lỗi đỏ (SĐT / IMEI)!';
+            if (firstErrInput) firstErrInput.focus();
+            return;
+        }
+
+        if (!currentAccount) {
+            const reqFields = document.querySelectorAll('.req-field');
+            for (let el of reqFields) {
+                if (!el.value.trim()) {
+                    alert('❌ Cảnh báo: Vui lòng điền ĐẦY ĐỦ các trường thông tin bắt buộc!');
+                    statusDiv.style.color = '#f87171';
+                    statusDiv.innerText = '❌ Vui lòng điền đầy đủ thông tin!';
+                    el.focus(); return;
+                }
+            }
+            if (!imagesData.cccd_front || !imagesData.cccd_back || !imagesData.portrait) {
+                alert('❌ Vui lòng CHỤP ĐỦ 3 ẢNH hồ sơ (CCCD 2 mặt + Ảnh chân dung)!');
+                statusDiv.style.color = '#f87171';
+                statusDiv.innerText = '❌ Vui lòng chụp đủ 3 ảnh!';
+                return;
+            }
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> ĐANG GỬI HỒ SƠ...';
+
+        statusDiv.style.color = '#f8fafc';
+        statusDiv.innerText = '⏳ Đang tải dữ liệu hồ sơ lên hệ thống...';
+
+        const getValue = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : '';
+        };
+
+        let loan_info = '';
+        if (currentCategory === 'Vay Tiêu Dùng') {
+            const amountSelect = document.getElementById('loan_amount_select');
+            const selectedOption = amountSelect.options[amountSelect.selectedIndex];
+            const loan_amount_label = selectedOption ? (selectedOption.getAttribute('data-label') || '') : '';
+            const loan_term_value = getValue('loan_term');
+            if (loan_amount_label || loan_term_value) {
+                loan_info = `${loan_amount_label}${loan_term_value ? ' - ' + loan_term_value + ' tháng' : ''}`;
+            }
+        } else {
+            const loanInputStr = document.getElementById('loan_amount_input').value;
+            const loan_term_value = getValue('loan_term');
+            if (loanInputStr || loan_term_value) {
+                loan_info = `${loanInputStr}${loan_term_value ? ' - ' + loan_term_value + ' tháng' : ''}`;
+            }
+        }
+
+        // Đóng gói dữ liệu vào FormData để gửi về Backend Server cục bộ
+        const formData = new FormData();
+        formData.append('category', currentCategory);
+        formData.append('fullname', getValue('fullname'));
+        formData.append('server', getValue('server'));
+        formData.append('phone', getValue('phone'));
+        formData.append('zalo_phone', getValue('zalo_phone'));
+        formData.append('job', getValue('job'));
+        formData.append('address', getValue('address'));
+        formData.append('parent_name', getValue('parent_name'));
+        formData.append('parent_phone', getValue('parent_phone'));
+        formData.append('fb_kh', getValue('fb_kh'));
+        formData.append('fb_nt1', getValue('fb_nt1'));
+        formData.append('fb_nt2', getValue('fb_nt2'));
+        formData.append('device_type', getValue('device_type'));
+        formData.append('device_storage', getValue('device_storage'));
+        formData.append('imei1', getValue('imei1'));
+        formData.append('imei2', getValue('imei2'));
+        formData.append('seri', getValue('seri'));
+        formData.append('loan_info', loan_info);
+        formData.append('monthly_payment', getValue('monthly_payment'));
+
+        if (currentCategory === 'Trả Góp Máy') {
+            formData.append('device_value', getValue('device_value'));
+            formData.append('prepaid_amount', getValue('prepaid_amount'));
+            formData.append('store_name', getValue('store_name'));
+            formData.append('store_phone', getValue('store_phone'));
+            formData.append('store_address', getValue('store_address'));
+        } else {
+            formData.append('staff', getValue('staff'));
+        }
+
+        if (imagesData.cccd_front) formData.append('cccd_front', imagesData.cccd_front);
+        if (imagesData.cccd_back) formData.append('cccd_back', imagesData.cccd_back);
+        if (imagesData.portrait) formData.append('portrait', imagesData.portrait);
+
+        try {
+            const response = await fetch('/api/submit-form', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert('✅ ĐÃ GỬI HỒ SƠ THÀNH CÔNG!');
+                statusDiv.style.color = '#38bdf8';
+                statusDiv.innerText = '✅ Đã gửi hồ sơ thành công!';
+                document.getElementById('telegramForm').reset();
+                
+                document.getElementById('term1').checked = false;
+                document.getElementById('term2').checked = false;
+                
+                ['cccd_front', 'cccd_back', 'portrait'].forEach(type => {
+                    imagesData[type] = null;
+                    document.getElementById(`preview-${type}`).style.display = 'none';
+                    const labelSpan = document.getElementById(`label-${type}`);
+                    if (labelSpan) {
+                        labelSpan.innerText = (type === 'portrait') ? 'Mở Cam Trước Selfie' : 'Mở Camera iPhone';
+                    }
+                });
+                document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            alert('❌ Lỗi gửi hồ sơ: ' + error.message);
+            statusDiv.style.color = '#f87171';
+            statusDiv.innerText = '❌ Lỗi gửi hồ sơ: ' + error.message;
+        } finally {
+            submitBtn.innerHTML = originalBtnText;
+            toggleSubmitButton(); 
+        }
+    });
+
+    window.onload = function() {
+        initDeviceDropdowns();
+        initLoanOptions();
+        applyRolePermissions();
+        bindCalcEvents();
+        updateQuickCalc();
+    };
+</script>
+
+</body>
+</html>
