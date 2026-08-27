@@ -262,6 +262,7 @@
 
 <div class="app-container">
 
+    <!-- TOP NAVBAR -->
     <div class="top-navbar">
         <div class="user-badge">
             <div class="avatar-circle" id="userAvatar"><i class="fa-solid fa-user"></i></div>
@@ -280,6 +281,7 @@
         </div>
     </div>
 
+    <!-- MODAL ĐĂNG NHẬP ADMIN -->
     <div id="passwordModal" class="modal-overlay">
         <div class="modal-box">
             <i class="fa-solid fa-user-shield" style="font-size: 36px; color: var(--primary); margin-bottom: 14px;"></i>
@@ -295,6 +297,7 @@
         </div>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="dashboardScreen">
         <div class="welcome-card">
             <h2 class="title" id="secretTriggerTitle">Hệ Thống Hồ Sơ Vay L88</h2>
@@ -396,6 +399,7 @@
         </div>
     </div>
 
+    <!-- MÀN HÌNH QUẢN LÝ ADMIN -->
     <div id="accountMgrScreen" class="account-mgr-screen">
         <button class="btn-back" onclick="closeAccountManager()"><i class="fa-solid fa-arrow-left"></i> Quay lại Dashboard</button>
         <h2 style="font-size: 16px; color: #f8fafc; margin-bottom: 16px;"><i class="fa-solid fa-users-gear" style="color: var(--primary);"></i> QUẢN LÝ TÀI KHOẢN ADMIN</h2>
@@ -415,6 +419,7 @@
         <div id="userListContainer"></div>
     </div>
 
+    <!-- FORM HỒ SƠ CHÍNH -->
     <div id="formScreen" class="form-screen">
         <button class="btn-back" onclick="showDashboard()"><i class="fa-solid fa-arrow-left"></i> Quay lại Dashboard</button>
         <h2 id="formTitle" style="font-size: 16px; text-align: center; margin-bottom: 20px; color: #f8fafc; font-weight: 800;">HỒ SƠ KHÁCH HÀNG</h2>
@@ -427,13 +432,13 @@
                 
                 <div>
                     <label>Số điện thoại:</label>
-                    <input type="tel" id="phone" class="req-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                    <input type="tel" id="phone" class="req-field phone-input" placeholder="09x... (10 số)">
                     <div class="error-msg" id="error-phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                 </div>
                 
                 <div>
                     <label>SĐT Zalo:</label>
-                    <input type="tel" id="zalo_phone" class="req-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                    <input type="tel" id="zalo_phone" class="req-field phone-input" placeholder="09x... (10 số)">
                     <div class="error-msg" id="error-zalo_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                 </div>
 
@@ -448,7 +453,7 @@
                 
                 <div>
                     <label>SDT người thân:</label>
-                    <input type="tel" id="parent_phone" class="req-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                    <input type="tel" id="parent_phone" class="req-field phone-input" placeholder="09x... (10 số)">
                     <div class="error-msg" id="error-parent_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                 </div>
 
@@ -474,13 +479,13 @@
 
                 <div>
                     <label>IMEI 1:</label>
-                    <input type="tel" id="imei1" class="req-field imei-input" maxlength="15" placeholder="Nhập đúng 15 số IMEI">
+                    <input type="tel" id="imei1" class="req-field imei-input" placeholder="Nhập đúng 15 số IMEI">
                     <div class="error-msg" id="error-imei1">⚠️ IMEI 1 phải chứa đúng 15 chữ số.</div>
                 </div>
                 
                 <div>
                     <label>IMEI 2:</label>
-                    <input type="tel" id="imei2" class="req-field imei-input" maxlength="15" placeholder="Nhập đúng 15 số IMEI">
+                    <input type="tel" id="imei2" class="req-field imei-input" placeholder="Nhập đúng 15 số IMEI">
                     <div class="error-msg" id="error-imei2">⚠️ IMEI 2 phải chứa đúng 15 chữ số.</div>
                 </div>
 
@@ -489,6 +494,7 @@
                     <input type="text" id="seri" class="req-field" placeholder="VÍ DỤ: F2L..." style="text-transform: uppercase;">
                 </div>
 
+                <!-- Phân đoạn động cho phần Trả góp -->
                 <div id="wrapper_device_value" style="display: none;">
                     <label>Giá trị máy mua (VNĐ):</label>
                     <input type="text" id="device_value" class="installment-field money-input" placeholder="Ví dụ: 25.000.000" oninput="calculateLoanAmount()">
@@ -498,11 +504,15 @@
                     <label>Số tiền trả trước (VNĐ):</label>
                     <input type="text" id="prepaid_amount" class="installment-field money-input" placeholder="Ví dụ: 10.000.000" oninput="calculateLoanAmount()">
                 </div>
+                <!-- End Phân đoạn động -->
+                
                 <div>
                     <label>Số tiền vay:</label>
+                    <!-- Sẽ hiển thị thẻ select khi Vay Tiêu Dùng -->
                     <select id="loan_amount_select" class="req-field" onchange="calculateMonthlyPayment()">
                         <option value="" disabled selected>-- Chọn số tiền --</option>
                     </select>
+                    <!-- Sẽ hiển thị thẻ input khi Trả Góp Máy -->
                     <input type="text" id="loan_amount_input" readonly placeholder="Số tiền vay (Tự tính)" style="display: none; background: #171b25; color: var(--primary); font-weight: bold;">
                 </div>
 
@@ -531,6 +541,7 @@
                 </div>
             </div>
 
+            <!-- THÔNG TIN CỬA HÀNG -->
             <div id="store_info_section">
                 <div class="form-section-title">THÔNG TIN CỬA HÀNG</div>
                 <div class="grid">
@@ -541,7 +552,7 @@
 
                     <div>
                         <label>Số điện thoại cửa hàng:</label>
-                        <input type="tel" id="store_phone" class="req-field store-field phone-input" maxlength="10" placeholder="09x... (10 số)">
+                        <input type="tel" id="store_phone" class="req-field store-field phone-input" placeholder="09x... (10 số)">
                         <div class="error-msg" id="error-store_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                     </div>
 
@@ -552,8 +563,10 @@
                 </div>
             </div>
 
+            <!-- HÌNH ẢNH HỒ SƠ -->
             <div class="form-section-title">HÌNH ẢNH HỒ SƠ</div>
             
+            <!-- ĐÃ XÓA class="req-field" KHỎI THẺ SPAN Ở ĐÂY ĐỂ TRÁNH LỖI CRASH -->
             <label>1. Ảnh CCCD Mặt Trước <span style="color:#f87171">*</span></label>
             <div class="img-input-group" id="group-cccd_front" tabindex="0">
                 <div class="paste-hint admin-only" style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">📋 Click & <b>Ctrl + V</b> để dán ảnh (Máy tính)</div>
@@ -566,12 +579,14 @@
                     <button type="button" class="btn-act btn-cam" id="btn-cam-cccd_front" onclick="triggerCamera('cam-cccd_front')">
                         <i class="fa-solid fa-camera"></i> <span id="label-cccd_front">Mở Camera Điện Thoại</span>
                     </button>
+                    <!-- Mở khóa nút Thư viện cho toàn bộ người dùng để linh hoạt thiết bị -->
                     <button type="button" class="btn-act btn-file" onclick="document.getElementById('file-cccd_front').click()">
                         <i class="fa-solid fa-folder-open"></i> Tải ảnh từ thư viện
                     </button>
                 </div>
             </div>
 
+            <!-- ĐÃ XÓA class="req-field" KHỎI THẺ SPAN Ở ĐÂY ĐỂ TRÁNH LỖI CRASH -->
             <label>2. Ảnh CCCD Mặt Sau <span style="color:#f87171">*</span></label>
             <div class="img-input-group" id="group-cccd_back" tabindex="0">
                 <div class="paste-hint admin-only" style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">📋 Click & <b>Ctrl + V</b> để dán ảnh (Máy tính)</div>
@@ -590,6 +605,7 @@
                 </div>
             </div>
 
+            <!-- ĐÃ XÓA class="req-field" KHỎI THẺ SPAN Ở ĐÂY ĐỂ TRÁNH LỖI CRASH -->
             <label>3. Ảnh Chân Dung <span style="color:#f87171">*</span></label>
             <div class="img-input-group" id="group-portrait" tabindex="0">
                 <div class="paste-hint admin-only" style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">📋 Click & <b>Ctrl + V</b> để dán ảnh (Máy tính)</div>
@@ -608,6 +624,7 @@
                 </div>
             </div>
 
+            <!-- MỤC ĐIỀU KHOẢN -->
             <div class="terms-container">
                 <label class="term-item">
                     <input type="checkbox" id="term1" onchange="toggleSubmitButton()">
