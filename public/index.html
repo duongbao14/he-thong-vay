@@ -503,11 +503,9 @@
                 
                 <div>
                     <label>Số tiền vay:</label>
-                    <!-- Sẽ hiển thị thẻ select khi Vay Tiêu Dùng -->
                     <select id="loan_amount_select" class="req-field" onchange="calculateMonthlyPayment()">
                         <option value="" disabled selected>-- Chọn số tiền --</option>
                     </select>
-                    <!-- Sẽ hiển thị thẻ input khi Trả Góp Máy -->
                     <input type="text" id="loan_amount_input" readonly placeholder="Số tiền vay (Tự tính)" style="display: none; background: #171b25; color: var(--primary); font-weight: bold;">
                 </div>
 
@@ -534,31 +532,41 @@
             <div id="store_info_section">
                 <div class="form-section-title">THÔNG TIN CỬA HÀNG & HỆ THỐNG</div>
                 <div class="grid">
-                    <div class="full-width">
-                        <label>Tên cửa hàng:</label>
-                        <input type="text" id="store_name" class="req-field store-field" placeholder="Tên cửa hàng">
+                    
+                    <!-- Lựa chọn hình thức khi Vay Tiêu Dùng -->
+                    <div class="full-width" id="wrapper_vtd_type" style="display: none;">
+                        <label style="color: var(--primary);">Hình thức Vay Tiêu Dùng:</label>
+                        <select id="vtd_type" onchange="toggleVtdType()">
+                            <option value="" disabled selected>-- Chọn hình thức --</option>
+                            <option value="icloud">Vay tài lộc iCloud (Cần Máy chủ & CTV)</option>
+                            <option value="store">Vay thông qua cửa hàng (Cần Địa chỉ & SĐT)</option>
+                        </select>
                     </div>
 
-                    <div>
+                    <!-- Nhóm 1: Thông tin Cửa hàng -->
+                    <div class="full-width group-store">
+                        <label>Tên cửa hàng:</label>
+                        <input type="text" id="store_name" class="store-field" placeholder="Tên cửa hàng">
+                    </div>
+                    <div class="group-store">
                         <label>Số điện thoại cửa hàng:</label>
-                        <input type="tel" id="store_phone" class="req-field store-field phone-input" placeholder="09x... (10 số)">
+                        <input type="tel" id="store_phone" class="store-field phone-input" placeholder="09x... (10 số)">
                         <div class="error-msg" id="error-store_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                     </div>
-
-                    <div>
+                    <div class="group-store">
                         <label>Địa chỉ cửa hàng:</label>
-                        <input type="text" id="store_address" class="req-field store-field" placeholder="Chi tiết địa chỉ">
+                        <input type="text" id="store_address" class="store-field" placeholder="Chi tiết địa chỉ">
                     </div>
 
-                    <div class="full-width" id="wrapper_staff" style="display: none;">
-                        <label>Nhân viên cài (Không tự điền):</label>
-                        <input type="text" id="staff" class="text-only-input" placeholder="Tên nhân viên (Chỉ điền chữ)">
-                        <div class="error-msg" id="error-staff">⚠️ Họ tên nhân viên chỉ bao gồm chữ cái.</div>
-                    </div>
-
-                    <div class="full-width">
+                    <!-- Nhóm 2: Thông tin iCloud -->
+                    <div class="full-width group-icloud" style="display: none;">
                         <label>Máy chủ (Không tự điền):</label>
-                        <input type="text" id="server" placeholder="Máy chủ">
+                        <input type="text" id="server" class="icloud-field" placeholder="Máy chủ">
+                    </div>
+                    <div class="full-width group-icloud" style="display: none;">
+                        <label>CTV / Nhân viên cài (Không tự điền):</label>
+                        <input type="text" id="staff" class="icloud-field text-only-input" placeholder="Tên CTV (Chỉ điền chữ)">
+                        <div class="error-msg" id="error-staff">⚠️ Họ tên CTV chỉ bao gồm chữ cái.</div>
                     </div>
                 </div>
             </div>
@@ -846,8 +854,11 @@
             adminElements.forEach(el => el.style.display = 'none');
             reqFields.forEach(el => el.setAttribute('required', 'required'));
             
-            document.getElementById('server').removeAttribute('required');
-            document.getElementById('staff').removeAttribute('required');
+            // Xóa required cho các field không hiển thị ban đầu
+            document.querySelectorAll('.icloud-field').forEach(el => el.removeAttribute('required'));
+            if(currentCategory === 'Vay Tiêu Dùng') {
+                document.querySelectorAll('.store-field').forEach(el => el.removeAttribute('required'));
+            }
         }
     }
 
@@ -913,13 +924,34 @@
         }
     }
 
+    function toggleVtdType() {
+        const type = document.getElementById('vtd_type').value;
+        const stores = document.querySelectorAll('.group-store');
+        const iclouds = document.querySelectorAll('.group-icloud');
+        const storeFields = document.querySelectorAll('.store-field');
+        const icloudFields = document.querySelectorAll('.icloud-field');
+
+        if (type === 'icloud') {
+            stores.forEach(el => el.style.display = 'none');
+            iclouds.forEach(el => el.style.display = 'block');
+            
+            storeFields.forEach(el => { el.classList.remove('req-field'); el.value = ''; });
+            icloudFields.forEach(el => el.classList.add('req-field'));
+        } else if (type === 'store') {
+            iclouds.forEach(el => el.style.display = 'none');
+            stores.forEach(el => el.style.display = 'block');
+            
+            icloudFields.forEach(el => { el.classList.remove('req-field'); el.value = ''; });
+            storeFields.forEach(el => el.classList.add('req-field'));
+        }
+        
+        applyRolePermissions();
+    }
+
     function openForm(categoryName) {
         currentCategory = categoryName;
         document.getElementById('formTitle').innerText = `HỒ SƠ: ${categoryName.toUpperCase()}`;
         
-        const storeSection = document.getElementById('store_info_section');
-        const storeFields = document.querySelectorAll('.store-field');
-
         const wrapperDV = document.getElementById('wrapper_device_value');
         const wrapperPA = document.getElementById('wrapper_prepaid_amount');
         const instFields = document.querySelectorAll('.installment-field');
@@ -927,34 +959,37 @@
         const loanSelect = document.getElementById('loan_amount_select');
         const loanInput = document.getElementById('loan_amount_input');
         
-        const wrapperStaff = document.getElementById('wrapper_staff');
-        const staffInput = document.getElementById('staff');
+        const wrapperVtdType = document.getElementById('wrapper_vtd_type');
+        const vtdTypeSelect = document.getElementById('vtd_type');
 
-        // Luôn hiển thị thông tin cửa hàng cho cả 2 tùy chọn
-        storeSection.style.display = 'block';
-        storeFields.forEach(el => el.classList.add('req-field'));
+        document.getElementById('store_info_section').style.display = 'block';
 
         if (categoryName === 'Vay Tiêu Dùng') {
             wrapperDV.style.display = 'none';
             wrapperPA.style.display = 'none';
-            instFields.forEach(el => {
-                el.classList.remove('req-field');
-                el.value = '';
-            });
+            instFields.forEach(el => { el.classList.remove('req-field'); el.value = ''; });
 
             loanSelect.style.display = 'block';
             loanSelect.classList.add('req-field');
             loanInput.style.display = 'none';
             loanInput.classList.remove('req-field');
             
-            wrapperStaff.style.display = 'block';
+            wrapperVtdType.style.display = 'block';
+            vtdTypeSelect.classList.add('req-field');
+            vtdTypeSelect.value = '';
+            
+            // Ẩn cả 2 nhánh thông tin ban đầu, chờ chọn từ dropdown
+            document.querySelectorAll('.group-store').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.store-field, .icloud-field').forEach(el => {
+                el.classList.remove('req-field');
+                el.value = '';
+            });
             
         } else {
             wrapperDV.style.display = 'block';
             wrapperPA.style.display = 'block';
-            instFields.forEach(el => {
-                el.classList.add('req-field');
-            });
+            instFields.forEach(el => { el.classList.add('req-field'); });
 
             loanSelect.style.display = 'none';
             loanSelect.classList.remove('req-field');
@@ -962,8 +997,18 @@
             loanInput.style.display = 'block';
             loanInput.classList.add('req-field');
             
-            wrapperStaff.style.display = 'none';
-            staffInput.value = '';
+            wrapperVtdType.style.display = 'none';
+            vtdTypeSelect.classList.remove('req-field');
+            
+            // Trả góp: Tự động hiển thị phần cửa hàng, ẩn icloud
+            document.querySelectorAll('.group-store').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
+            
+            document.querySelectorAll('.store-field').forEach(el => el.classList.add('req-field'));
+            document.querySelectorAll('.icloud-field').forEach(el => {
+                el.classList.remove('req-field');
+                el.value = '';
+            });
         }
 
         loanInput.value = '';
@@ -1244,6 +1289,9 @@
 
         const formData = new FormData();
         formData.append('category', currentCategory);
+        if (currentCategory === 'Vay Tiêu Dùng') {
+            formData.append('vtd_type', getValue('vtd_type'));
+        }
         
         const fName = getValue('fullname');
         const dType = getValue('device_type');
@@ -1275,14 +1323,20 @@
         if (currentCategory === 'Trả Góp Máy') {
             formData.append('device_value', getValue('device_value'));
             formData.append('prepaid_amount', getValue('prepaid_amount'));
+            formData.append('store_name', getValue('store_name'));
+            formData.append('store_phone', getValue('store_phone'));
+            formData.append('store_address', getValue('store_address'));
         } else {
-            formData.append('staff', getValue('staff'));
+            const type = getValue('vtd_type');
+            if(type === 'icloud') {
+                formData.append('server', getValue('server'));
+                formData.append('staff', getValue('staff'));
+            } else if(type === 'store') {
+                formData.append('store_name', getValue('store_name'));
+                formData.append('store_phone', getValue('store_phone'));
+                formData.append('store_address', getValue('store_address'));
+            }
         }
-
-        // Bổ sung gửi thông tin Cửa hàng vào FormData ở cả 2 mục Trả góp máy & Vay tiêu dùng
-        formData.append('store_name', getValue('store_name'));
-        formData.append('store_phone', getValue('store_phone'));
-        formData.append('store_address', getValue('store_address'));
 
         if (imagesData.cccd_front) formData.append('cccd_front', imagesData.cccd_front);
         if (imagesData.cccd_back) formData.append('cccd_back', imagesData.cccd_back);
@@ -1314,6 +1368,13 @@
                 });
                 document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                
+                // Trả giao diện về mặc định cho Vay Tiêu Dùng nếu đang ở đó
+                if(currentCategory === 'Vay Tiêu Dùng') {
+                    document.querySelectorAll('.group-store').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
+                }
+
             } else {
                 throw new Error(result.message);
             }
