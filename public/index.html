@@ -9,7 +9,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
         :root {
-            /* Tông màu Cyber/Fintech dựa trên thiết kế */
             --primary: #38bdf8;
             --primary-light: rgba(56, 189, 248, 0.15);
             --accent: #38bdf8;
@@ -39,7 +38,7 @@
             justify-content: center;
             align-items: center;
             color: var(--text-main);
-            padding: 15px 10px; /* Responsive padding */
+            padding: 15px 10px;
         }
 
         @keyframes fadeIn {
@@ -164,7 +163,6 @@
 
         label { font-size: 12px; display: block; margin-top: 4px; color: var(--text-main); font-weight: 600; margin-bottom: 6px; }
         
-        /* Cải thiện ô nhập cho mobile */
         input[type="text"], input[type="password"], input[type="tel"], input[type="url"], select {
             width: 100%; padding: 14px 14px; border: 1px solid var(--card-border);
             border-radius: 12px; background: transparent; color: #f8fafc; font-size: 14px; outline: none;
@@ -245,12 +243,10 @@
 
         #status { margin-top: 16px; text-align: center; font-weight: 700; font-size: 13px; }
 
-        /* Mobile Breakpoint - Tối ưu font size và form cho điện thoại */
         @media (max-width: 600px) { 
             .grid { grid-template-columns: 1fr; } 
             .full-width { grid-column: span 1; } 
             .app-container { padding: 20px 16px; border-radius: 20px; }
-            /* Chống auto-zoom trên iOS Safari */
             input[type="text"], input[type="password"], input[type="tel"], input[type="url"], select {
                 font-size: 16px; 
             }
@@ -427,8 +423,7 @@
         <form id="telegramForm" novalidate>
             <div class="form-section-title">THÔNG TIN KHÁCH HÀNG</div>
             <div class="grid">
-                <div><label>Họ và tên:</label><input type="text" id="fullname" class="req-field" placeholder="Họ và tên"></div>
-                <div><label>Máy chủ (Không tự điền):</label><input type="text" id="server" placeholder="Máy chủ"></div>
+                <div class="full-width"><label>Họ và tên:</label><input type="text" id="fullname" class="req-field" placeholder="Họ và tên"></div>
                 
                 <div>
                     <label>Số điện thoại:</label>
@@ -443,8 +438,7 @@
                 </div>
 
                 <div class="full-width"><label>Nghề nghiệp:</label><input type="text" id="job" class="req-field" placeholder="Công việc hiện tại"></div>
-                <div class="full-width"><label>Địa chỉ khách hàng :</label><input type="text" id="address" class="req-field" placeholder="Địa chỉ chi tiết"></div>
-                <div class="full-width"><label>Số điện thoại & địa chỉ cửa hàng:</label><input type="text" id="address" class="req-field" placeholder="Số điện thoại địa chỉ cửa hàng"></div>
+                <div class="full-width"><label>Địa chỉ khách hàng:</label><input type="text" id="address" class="req-field" placeholder="Địa chỉ chi tiết"></div>
                 <div class="full-width"><label>Link FB khách hàng:</label><input type="url" id="fb_kh" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
@@ -534,20 +528,14 @@
                     <label style="color: var(--success); font-weight: 800; font-size: 13px; margin-bottom: 8px;">MỨC GÓP HÀNG THÁNG:</label>
                     <input type="text" id="monthly_payment" class="highlight-monthly-box" readonly placeholder="--- 0 VNĐ ---">
                 </div>
-
-                <div class="full-width" id="wrapper_staff">
-                    <label>Nhân viên cài (Không tự điền) :</label>
-                    <input type="text" id="staff" class="text-only-input" placeholder="Tên nhân viên (Chỉ điền chữ)">
-                    <div class="error-msg" id="error-staff">⚠️ Họ tên nhân viên chỉ bao gồm chữ cái.</div>
-                </div>
             </div>
 
-            <!-- THÔNG TIN CỬA HÀNG -->
+            <!-- THÔNG TIN CỬA HÀNG & HỆ THỐNG -->
             <div id="store_info_section">
-                <div class="form-section-title">THÔNG TIN CỬA HÀNG</div>
+                <div class="form-section-title">THÔNG TIN CỬA HÀNG & HỆ THỐNG</div>
                 <div class="grid">
-                    <div>
-                        <label>Tên cửa hàng và </label>
+                    <div class="full-width">
+                        <label>Tên cửa hàng:</label>
                         <input type="text" id="store_name" class="req-field store-field" placeholder="Tên cửa hàng">
                     </div>
 
@@ -557,9 +545,20 @@
                         <div class="error-msg" id="error-store_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                     </div>
 
+                    <div>
+                        <label>Địa chỉ cửa hàng:</label>
+                        <input type="text" id="store_address" class="req-field store-field" placeholder="Chi tiết địa chỉ">
+                    </div>
+
+                    <div class="full-width" id="wrapper_staff" style="display: none;">
+                        <label>Nhân viên cài (Không tự điền):</label>
+                        <input type="text" id="staff" class="text-only-input" placeholder="Tên nhân viên (Chỉ điền chữ)">
+                        <div class="error-msg" id="error-staff">⚠️ Họ tên nhân viên chỉ bao gồm chữ cái.</div>
+                    </div>
+
                     <div class="full-width">
-                        <label>Địa chỉ cửa hàng ( Ghi chi tiết địa chỉ giúp em ) :</label>
-                        <input type="text" id="store_address" class="req-field store-field" placeholder="Địa chỉ chi tiết cửa hàng">
+                        <label>Máy chủ (Không tự điền):</label>
+                        <input type="text" id="server" placeholder="Máy chủ">
                     </div>
                 </div>
             </div>
@@ -567,7 +566,6 @@
             <!-- HÌNH ẢNH HỒ SƠ -->
             <div class="form-section-title">HÌNH ẢNH HỒ SƠ</div>
             
-            <!-- ĐÃ XÓA class="req-field" KHỎI THẺ SPAN Ở ĐÂY ĐỂ TRÁNH LỖI CRASH -->
             <label>1. Ảnh CCCD Mặt Trước <span style="color:#f87171">*</span></label>
             <div class="img-input-group" id="group-cccd_front" tabindex="0">
                 <div class="paste-hint admin-only" style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">📋 Click & <b>Ctrl + V</b> để dán ảnh (Máy tính)</div>
@@ -580,14 +578,12 @@
                     <button type="button" class="btn-act btn-cam" id="btn-cam-cccd_front" onclick="triggerCamera('cam-cccd_front')">
                         <i class="fa-solid fa-camera"></i> <span id="label-cccd_front">Mở Camera Điện Thoại</span>
                     </button>
-                    <!-- Mở khóa nút Thư viện cho toàn bộ người dùng để linh hoạt thiết bị -->
                     <button type="button" class="btn-act btn-file" onclick="document.getElementById('file-cccd_front').click()">
                         <i class="fa-solid fa-folder-open"></i> Tải ảnh từ thư viện
                     </button>
                 </div>
             </div>
 
-            <!-- ĐÃ XÓA class="req-field" KHỎI THẺ SPAN Ở ĐÂY ĐỂ TRÁNH LỖI CRASH -->
             <label>2. Ảnh CCCD Mặt Sau <span style="color:#f87171">*</span></label>
             <div class="img-input-group" id="group-cccd_back" tabindex="0">
                 <div class="paste-hint admin-only" style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">📋 Click & <b>Ctrl + V</b> để dán ảnh (Máy tính)</div>
@@ -606,7 +602,6 @@
                 </div>
             </div>
 
-            <!-- ĐÃ XÓA class="req-field" KHỎI THẺ SPAN Ở ĐÂY ĐỂ TRÁNH LỖI CRASH -->
             <label>3. Ảnh Chân Dung <span style="color:#f87171">*</span></label>
             <div class="img-input-group" id="group-portrait" tabindex="0">
                 <div class="paste-hint admin-only" style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">📋 Click & <b>Ctrl + V</b> để dán ảnh (Máy tính)</div>
@@ -935,13 +930,11 @@
         const wrapperStaff = document.getElementById('wrapper_staff');
         const staffInput = document.getElementById('staff');
 
-        if (categoryName === 'Vay Tiêu Dùng') {
-            storeSection.style.display = 'none';
-            storeFields.forEach(el => {
-                el.classList.remove('req-field');
-                el.value = '';
-            });
+        // Luôn hiển thị thông tin cửa hàng cho cả 2 tùy chọn
+        storeSection.style.display = 'block';
+        storeFields.forEach(el => el.classList.add('req-field'));
 
+        if (categoryName === 'Vay Tiêu Dùng') {
             wrapperDV.style.display = 'none';
             wrapperPA.style.display = 'none';
             instFields.forEach(el => {
@@ -957,9 +950,6 @@
             wrapperStaff.style.display = 'block';
             
         } else {
-            storeSection.style.display = 'block';
-            storeFields.forEach(el => el.classList.add('req-field'));
-
             wrapperDV.style.display = 'block';
             wrapperPA.style.display = 'block';
             instFields.forEach(el => {
@@ -1195,10 +1185,9 @@
         }
 
         if (!currentAccount) {
-            // FIX CỨNG: Thuật toán kiểm tra an toàn mới, tránh lỗi crash do thẻ Span
             const reqFields = document.querySelectorAll('.req-field');
             for (let el of reqFields) {
-                if (el.tagName === 'SPAN') continue; // Bỏ qua nếu là thẻ Span
+                if (el.tagName === 'SPAN') continue; 
                 
                 if (el.offsetParent !== null) {
                     const val = el.value || '';
@@ -1256,7 +1245,6 @@
         const formData = new FormData();
         formData.append('category', currentCategory);
         
-        // --- BẮT ĐẦU PHẦN SỬA ---
         const fName = getValue('fullname');
         const dType = getValue('device_type');
         const dStorage = getValue('device_storage');
@@ -1266,8 +1254,6 @@
         if (dStorage) combinedFullName += ` ${dStorage}`;
         
         formData.append('fullname', combinedFullName);
-        // --- KẾT THÚC PHẦN SỬA ---
-
         formData.append('server', getValue('server'));
         formData.append('phone', getValue('phone'));
         formData.append('zalo_phone', getValue('zalo_phone'));
@@ -1278,8 +1264,8 @@
         formData.append('fb_kh', getValue('fb_kh'));
         formData.append('fb_nt1', getValue('fb_nt1'));
         formData.append('fb_nt2', getValue('fb_nt2'));
-        formData.append('device_type', dType); // Vẫn gửi riêng nếu cần
-        formData.append('device_storage', dStorage); // Vẫn gửi riêng nếu cần
+        formData.append('device_type', dType); 
+        formData.append('device_storage', dStorage); 
         formData.append('imei1', getValue('imei1'));
         formData.append('imei2', getValue('imei2'));
         formData.append('seri', getValue('seri'));
@@ -1289,12 +1275,14 @@
         if (currentCategory === 'Trả Góp Máy') {
             formData.append('device_value', getValue('device_value'));
             formData.append('prepaid_amount', getValue('prepaid_amount'));
-            formData.append('store_name', getValue('store_name'));
-            formData.append('store_phone', getValue('store_phone'));
-            formData.append('store_address', getValue('store_address'));
         } else {
             formData.append('staff', getValue('staff'));
         }
+
+        // Bổ sung gửi thông tin Cửa hàng vào FormData ở cả 2 mục Trả góp máy & Vay tiêu dùng
+        formData.append('store_name', getValue('store_name'));
+        formData.append('store_phone', getValue('store_phone'));
+        formData.append('store_address', getValue('store_address'));
 
         if (imagesData.cccd_front) formData.append('cccd_front', imagesData.cccd_front);
         if (imagesData.cccd_back) formData.append('cccd_back', imagesData.cccd_back);
