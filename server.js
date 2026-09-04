@@ -31,10 +31,15 @@ app.post('/api/submit-form', upload.fields([
     const data = req.body;
     const files = req.files || {};
 
+    let categoryText = (data.category || '').toUpperCase();
+    if (data.category === 'Vay Tiêu Dùng') {
+      if (data.vtd_type === 'icloud') categoryText += ' (Tài Lộc iCloud)';
+      else if (data.vtd_type === 'store') categoryText += ' (Thông Qua Cửa Hàng)';
+    }
+
     let message = 
-`📌 LOẠI HỒ SƠ: ${(data.category || '').toUpperCase()}
+`📌 LOẠI HỒ SƠ: ${categoryText}
 Tên khách hàng : ${data.fullname || ''}
-Máy chủ : ${data.server || ''}
 Sdt : ${data.phone || ''}
 Sdt zalo : ${data.zalo_phone || ''}
 Nghề nghiệp : ${data.job || ''}
@@ -60,13 +65,21 @@ Số điện thoại cửa hàng : ${data.store_phone || ''}
 Số tiền vay + tháng : ${data.loan_info || ''}
 Góp hàng tháng: ${data.monthly_payment || ''}`;
     } else {
-      message += `
+      // Nhánh xử lý tuỳ chọn Vay Tiêu Dùng
+      if (data.vtd_type === 'icloud') {
+        message += `
+Máy chủ : ${data.server || ''}
+CTV : ${data.staff || ''}`;
+      } else if (data.vtd_type === 'store') {
+        message += `
 Tên cửa hàng : ${data.store_name || ''}
 Số điện thoại cửa hàng : ${data.store_phone || ''}
-Địa chỉ cửa hàng : ${data.store_address || ''}
+Địa chỉ cửa hàng : ${data.store_address || ''}`;
+      }
+
+      message += `
 Số tiền vay + tháng : ${data.loan_info || ''}
-Góp hàng tháng: ${data.monthly_payment || ''}
-Nvien cài : ${data.staff || ''}`;
+Góp hàng tháng: ${data.monthly_payment || ''}`;
     }
 
     // 1. Gửi tin nhắn văn bản
