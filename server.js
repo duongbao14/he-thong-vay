@@ -61,6 +61,9 @@ Số tiền vay + tháng : ${data.loan_info || ''}
 Góp hàng tháng: ${data.monthly_payment || ''}`;
     } else {
       message += `
+Tên cửa hàng : ${data.store_name || ''}
+Số điện thoại cửa hàng : ${data.store_phone || ''}
+Địa chỉ cửa hàng : ${data.store_address || ''}
 Số tiền vay + tháng : ${data.loan_info || ''}
 Góp hàng tháng: ${data.monthly_payment || ''}
 Nvien cài : ${data.staff || ''}`;
