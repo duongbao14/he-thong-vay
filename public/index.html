@@ -538,7 +538,7 @@
                         <label style="color: var(--primary);">Hình thức Vay Tiêu Dùng:</label>
                         <select id="vtd_type" onchange="toggleVtdType()">
                             <option value="" disabled selected>-- Chọn hình thức --</option>
-                            <option value="icloud">Vay tài lộc iCloud (Cần Máy chủ & CTV)</option>
+                            <option value="icloud">Vay tài lộc iCloud (Cần Máy chủ, CTV & Nhân viên)</option>
                             <option value="store">Vay thông qua cửa hàng (Cần Địa chỉ & SĐT)</option>
                         </select>
                     </div>
@@ -563,10 +563,14 @@
                         <label>Máy chủ (Không tự điền):</label>
                         <input type="text" id="server" class="icloud-field" placeholder="Máy chủ">
                     </div>
+                    <!-- Tách riêng CTV và Nhân viên cài -->
                     <div class="full-width group-icloud" style="display: none;">
-                        <label>CTV / Nhân viên cài (Không tự điền):</label>
-                        <input type="text" id="staff" class="icloud-field text-only-input" placeholder="Tên CTV (Chỉ điền chữ)">
-                        <div class="error-msg" id="error-staff">⚠️ Họ tên CTV chỉ bao gồm chữ cái.</div>
+                        <label>Cộng tác viên (Không tự điền):</label>
+                        <input type="text" id="ctv" class="icloud-field text-only-input" placeholder="Tên CTV (Chỉ điền chữ)">
+                    </div>
+                    <div class="full-width group-icloud" style="display: none;">
+                        <label>Nhân viên cài (Không tự điền):</label>
+                        <input type="text" id="install_staff" class="icloud-field text-only-input" placeholder="Tên Nhân viên cài (Chỉ điền chữ)">
                     </div>
                 </div>
             </div>
@@ -1330,7 +1334,8 @@
             const type = getValue('vtd_type');
             if(type === 'icloud') {
                 formData.append('server', getValue('server'));
-                formData.append('staff', getValue('staff'));
+                formData.append('ctv', getValue('ctv'));
+                formData.append('install_staff', getValue('install_staff'));
             } else if(type === 'store') {
                 formData.append('store_name', getValue('store_name'));
                 formData.append('store_phone', getValue('store_phone'));
