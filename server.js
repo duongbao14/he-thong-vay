@@ -69,7 +69,8 @@ Góp hàng tháng: ${data.monthly_payment || ''}`;
       if (data.vtd_type === 'icloud') {
         message += `
 Máy chủ : ${data.server || ''}
-CTV : ${data.staff || ''}`;
+CTV : ${data.ctv || ''}
+Nhân viên cài : ${data.install_staff || ''}`;
       } else if (data.vtd_type === 'store') {
         message += `
 Tên cửa hàng : ${data.store_name || ''}
@@ -205,6 +206,33 @@ bot.action(/btnreject_(\d+)/, async (ctx) => {
   } catch (err) {
     console.error('Lỗi từ chối:', err.message);
     await ctx.answerCbQuery('Có lỗi xảy ra!');
+  }
+});
+
+// Chức năng sửa text hồ sơ bằng cách Reply tin nhắn của Bot
+bot.on('text', async (ctx) => {
+  // Kiểm tra xem tin nhắn có nằm trong nhóm duyệt hồ sơ và là một hành động Reply không
+  if (ctx.message.chat.id === SOURCE_GROUP_ID && ctx.message.reply_to_message) {
+    const repliedMsg = ctx.message.reply_to_message;
+    
+    // Đảm bảo tin nhắn được Reply là của chính Bot và có chứa cụm nút bấm duyệt hồ sơ
+    if (repliedMsg.from.id === ctx.botInfo.id && repliedMsg.reply_markup) {
+      try {
+        // Bot tự sửa nội dung tin nhắn gốc thành nội dung mới mà bạn vừa gửi
+        await ctx.telegram.editMessageText(
+          ctx.message.chat.id,
+          repliedMsg.message_id,
+          undefined,
+          ctx.message.text,
+          { reply_markup: repliedMsg.reply_markup } // Giữ nguyên các nút bấm MDM, iCloud
+        );
+        
+        // Tự động xóa tin nhắn bạn vừa chat để giữ nhóm luôn sạch sẽ
+        await ctx.deleteMessage(ctx.message.message_id).catch(() => {});
+      } catch (err) {
+        console.error('Lỗi khi cập nhật hồ sơ:', err.message);
+      }
+    }
   }
 });
 
