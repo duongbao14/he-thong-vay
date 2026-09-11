@@ -45,10 +45,8 @@ Sdt zalo : ${data.zalo_phone || ''}
 Nghề nghiệp : ${data.job || ''}
 Địa chỉ : ${data.address || ''}
 Tên người thân : ${data.parent_name || ''}
-SDT người thân : ${data.parent_phone || ''}
 Link fb khách hàng : ${data.fb_kh || ''}
 Link fb người thân 1 : ${data.fb_nt1 || ''}
-Link fb người thân 2 : ${data.fb_nt2 || ''}
 Loại máy : ${data.device_type || ''}
 Dung lượng máy : ${data.device_storage || ''}
 IMEI 1 : ${data.imei1 || ''}
