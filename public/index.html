@@ -444,16 +444,8 @@
 
             <div class="form-section-title">THÔNG TIN NGƯỜI THÂN</div>
             <div class="grid">
-                <div><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
-                
-                <div>
-                    <label>SDT người thân:</label>
-                    <input type="tel" id="parent_phone" class="req-field phone-input" placeholder="09x... (10 số)">
-                    <div class="error-msg" id="error-parent_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
-                </div>
-
-                <div class="full-width"><label>Link FB người thân 1:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
-                <div class="full-width"><label>Link FB người thân 2:</label><input type="url" id="fb_nt2" class="req-field" placeholder="https://www.facebook.com/..."></div>
+                <div class="full-width"><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
+                <div class="full-width"><label>Link FB người thân:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
             <div class="form-section-title">THÔNG TIN THIẾT BỊ & KHOẢN VAY</div>
@@ -1311,11 +1303,12 @@
         formData.append('zalo_phone', getValue('zalo_phone'));
         formData.append('job', getValue('job'));
         formData.append('address', getValue('address'));
+        
+        // Cập nhật lược bỏ thông tin người thân
         formData.append('parent_name', getValue('parent_name'));
-        formData.append('parent_phone', getValue('parent_phone'));
         formData.append('fb_kh', getValue('fb_kh'));
         formData.append('fb_nt1', getValue('fb_nt1'));
-        formData.append('fb_nt2', getValue('fb_nt2'));
+        
         formData.append('device_type', dType); 
         formData.append('device_storage', dStorage); 
         formData.append('imei1', getValue('imei1'));
