@@ -442,6 +442,7 @@
                 <div class="full-width"><label>Link FB khách hàng:</label><input type="url" id="fb_kh" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
+            <!-- CHỈ CÒN TÊN VÀ 1 LINK FB NGƯỜI THÂN -->
             <div class="form-section-title">THÔNG TIN NGƯỜI THÂN</div>
             <div class="grid">
                 <div class="full-width"><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
@@ -1304,7 +1305,7 @@
         formData.append('job', getValue('job'));
         formData.append('address', getValue('address'));
         
-        // Cập nhật lược bỏ thông tin người thân
+        // CHỈ GỬI LÊN 1 TÊN VÀ 1 LINK FB NGƯỜI THÂN
         formData.append('parent_name', getValue('parent_name'));
         formData.append('fb_kh', getValue('fb_kh'));
         formData.append('fb_nt1', getValue('fb_nt1'));
@@ -1367,7 +1368,6 @@
                 document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
                 
-                // Trả giao diện về mặc định cho Vay Tiêu Dùng nếu đang ở đó
                 if(currentCategory === 'Vay Tiêu Dùng') {
                     document.querySelectorAll('.group-store').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
