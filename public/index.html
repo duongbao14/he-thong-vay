@@ -442,11 +442,16 @@
                 <div class="full-width"><label>Link FB khách hàng:</label><input type="url" id="fb_kh" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
-            <!-- CHỈ CÒN TÊN VÀ 1 LINK FB NGƯỜI THÂN -->
+            <!-- THÔNG TIN NGƯỜI THÂN -->
             <div class="form-section-title">THÔNG TIN NGƯỜI THÂN</div>
             <div class="grid">
                 <div class="full-width"><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
-                <div class="full-width"><label>Link FB người thân:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
+                <div>
+                    <label>SDT người thân:</label>
+                    <input type="tel" id="parent_phone" class="req-field phone-input" placeholder="09x... (10 số)">
+                    <div class="error-msg" id="error-parent_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
+                </div>
+                <div><label>Link FB người thân:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
             <div class="form-section-title">THÔNG TIN THIẾT BỊ & KHOẢN VAY</div>
@@ -1305,8 +1310,9 @@
         formData.append('job', getValue('job'));
         formData.append('address', getValue('address'));
         
-        // CHỈ GỬI LÊN 1 TÊN VÀ 1 LINK FB NGƯỜI THÂN
+        // Thêm SĐT người thân và 1 Link FB
         formData.append('parent_name', getValue('parent_name'));
+        formData.append('parent_phone', getValue('parent_phone'));
         formData.append('fb_kh', getValue('fb_kh'));
         formData.append('fb_nt1', getValue('fb_nt1'));
         
