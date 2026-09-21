@@ -331,7 +331,7 @@
                 </div>
                 <div style="flex: 1;">
                     <div style="font-size: 15px; font-weight: 700; color: #f8fafc;">Vay Tiêu Dùng</div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">Hạn mức linh hoạt từ 2tr - 15tr VNĐ</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top:4px;">Hạn mức linh hoạt từ 2tr - 20tr VNĐ</div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:14px;"></i>
             </div>
@@ -345,7 +345,7 @@
                 <span style="font-size: 13px; font-weight: 700; color: #f8fafc;">Số tiền vay:</span>
                 <span id="calcAmountLabel" style="color: var(--primary); font-size: 16px; font-weight: 800;">5.000.000 VNĐ</span>
             </div>
-            <input type="range" min="2000000" max="15000000" step="500000" value="5000000" class="range-slider" id="calcAmountRange">
+            <input type="range" min="2000000" max="20000000" step="500000" value="5000000" class="range-slider" id="calcAmountRange">
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span style="font-size: 13px; font-weight: 700; color: #f8fafc;">Thời hạn:</span>
@@ -442,16 +442,18 @@
                 <div class="full-width"><label>Link FB khách hàng:</label><input type="url" id="fb_kh" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
-            <!-- THÔNG TIN NGƯỜI THÂN -->
             <div class="form-section-title">THÔNG TIN NGƯỜI THÂN</div>
             <div class="grid">
-                <div class="full-width"><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
+                <div><label>Tên người thân:</label><input type="text" id="parent_name" class="req-field" placeholder="Họ tên người thân"></div>
+                
                 <div>
                     <label>SDT người thân:</label>
                     <input type="tel" id="parent_phone" class="req-field phone-input" placeholder="09x... (10 số)">
                     <div class="error-msg" id="error-parent_phone">⚠️ SĐT phải bắt đầu bằng số 0 và đúng 10 số.</div>
                 </div>
-                <div><label>Link FB người thân:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
+
+                <div class="full-width"><label>Link FB người thân 1:</label><input type="url" id="fb_nt1" class="req-field" placeholder="https://www.facebook.com/..."></div>
+                <div class="full-width"><label>Link FB người thân 2:</label><input type="url" id="fb_nt2" class="req-field" placeholder="https://www.facebook.com/..."></div>
             </div>
 
             <div class="form-section-title">THÔNG TIN THIẾT BỊ & KHOẢN VAY</div>
@@ -482,6 +484,7 @@
                     <div class="error-msg" id="error-imei2">⚠️ IMEI 2 phải chứa đúng 15 chữ số.</div>
                 </div>
 
+                <!-- Đã khôi phục trường Seri máy nhưng bỏ Javascript ép viết hoa tự động -->
                 <div>
                     <label>Seri máy:</label>
                     <input type="text" id="seri" class="req-field" placeholder="VÍ DỤ: F2L..." style="text-transform: uppercase;">
@@ -536,7 +539,7 @@
                         <label style="color: var(--primary);">Hình thức Vay Tiêu Dùng:</label>
                         <select id="vtd_type" onchange="toggleVtdType()">
                             <option value="" disabled selected>-- Chọn hình thức --</option>
-                            <option value="icloud">Vay tài lộc iCloud (Cần Máy chủ, CTV & Nhân viên)</option>
+                            <option value="icloud">Vay tài lộc iCloud (Cần Máy chủ & CTV)</option>
                             <option value="store">Vay thông qua cửa hàng (Cần Địa chỉ & SĐT)</option>
                         </select>
                     </div>
@@ -561,14 +564,10 @@
                         <label>Máy chủ (Không tự điền):</label>
                         <input type="text" id="server" class="icloud-field" placeholder="Máy chủ">
                     </div>
-                    <!-- Tách riêng CTV và Nhân viên cài -->
                     <div class="full-width group-icloud" style="display: none;">
-                        <label>Cộng tác viên (Không tự điền):</label>
-                        <input type="text" id="ctv" class="icloud-field text-only-input" placeholder="Tên CTV (Chỉ điền chữ)">
-                    </div>
-                    <div class="full-width group-icloud" style="display: none;">
-                        <label>Nhân viên cài (Không tự điền):</label>
-                        <input type="text" id="install_staff" class="icloud-field text-only-input" placeholder="Tên Nhân viên cài (Chỉ điền chữ)">
+                        <label>CTV / Nhân viên cài (Không tự điền):</label>
+                        <input type="text" id="staff" class="icloud-field text-only-input" placeholder="Tên CTV (Chỉ điền chữ)">
+                        <div class="error-msg" id="error-staff">⚠️ Họ tên CTV chỉ bao gồm chữ cái.</div>
                     </div>
                 </div>
             </div>
@@ -655,6 +654,10 @@
     const imagesData = { cccd_front: null, cccd_back: null, portrait: null };
 
     const deviceData = {
+        "iPhone 18 Pro Max": ["256GB", "512GB", "1TB", "2TB"],
+        "iPhone 18 Pro": ["256GB", "512GB", "1TB", "2TB"],
+        "iPhone 18 Plus": ["128GB", "256GB", "512GB"],
+        "iPhone 18": ["128GB", "256GB", "512GB"],
         "iPhone 17 Pro Max": ["256GB", "512GB", "1TB", "2TB"],
         "iPhone 17 Pro": ["256GB", "512GB", "1TB", "2TB"],
         "iPhone 17 Plus": ["128GB", "256GB", "512GB"],
@@ -916,7 +919,7 @@
     function initLoanOptions() {
         const select = document.getElementById('loan_amount_select');
         select.innerHTML = '<option value="" disabled selected>-- Chọn số tiền --</option>';
-        for (let amount = 2000000; amount <= 15000000; amount += 500000) {
+        for (let amount = 2000000; amount <= 20000000; amount += 500000) {
             const opt = document.createElement('option');
             opt.value = amount;
             const labelText = (amount / 1000000).toFixed(1).replace('.0', '') + 'tr';
@@ -1082,10 +1085,6 @@
             monthlyInput.value = ''; 
         }
     }
-
-    document.getElementById('seri').addEventListener('input', function() {
-        this.value = this.value.toUpperCase();
-    });
 
     document.querySelectorAll('.text-only-input').forEach(input => {
         input.addEventListener('input', function() {
@@ -1309,13 +1308,11 @@
         formData.append('zalo_phone', getValue('zalo_phone'));
         formData.append('job', getValue('job'));
         formData.append('address', getValue('address'));
-        
-        // Thêm SĐT người thân và 1 Link FB
         formData.append('parent_name', getValue('parent_name'));
         formData.append('parent_phone', getValue('parent_phone'));
         formData.append('fb_kh', getValue('fb_kh'));
         formData.append('fb_nt1', getValue('fb_nt1'));
-        
+        formData.append('fb_nt2', getValue('fb_nt2'));
         formData.append('device_type', dType); 
         formData.append('device_storage', dStorage); 
         formData.append('imei1', getValue('imei1'));
@@ -1334,8 +1331,7 @@
             const type = getValue('vtd_type');
             if(type === 'icloud') {
                 formData.append('server', getValue('server'));
-                formData.append('ctv', getValue('ctv'));
-                formData.append('install_staff', getValue('install_staff'));
+                formData.append('staff', getValue('staff'));
             } else if(type === 'store') {
                 formData.append('store_name', getValue('store_name'));
                 formData.append('store_phone', getValue('store_phone'));
@@ -1374,6 +1370,7 @@
                 document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
                 
+                // Trả giao diện về mặc định cho Vay Tiêu Dùng nếu đang ở đó
                 if(currentCategory === 'Vay Tiêu Dùng') {
                     document.querySelectorAll('.group-store').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
