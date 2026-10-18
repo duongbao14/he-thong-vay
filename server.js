@@ -66,7 +66,6 @@ Số điện thoại cửa hàng : ${data.store_phone || ''}
 Số tiền vay + tháng : ${data.loan_info || ''}
 Góp hàng tháng: ${data.monthly_payment || ''}`;
     } else {
-      // Nhánh xử lý tuỳ chọn Vay Tiêu Dùng
       if (data.vtd_type === 'icloud') {
         message += `
 Giữ CCCD khách : ${data.keep_cccd || ''}
@@ -116,7 +115,7 @@ Góp hàng tháng: ${data.monthly_payment || ''}`;
           source: fileArr[0].buffer,
           filename: 'image.jpg'
         }, { caption });
-        photoMsgIds.push(photoMsg.message_id); // Ghi nhận ID bức ảnh
+        photoMsgIds.push(photoMsg.message_id);
       }
     };
 
@@ -124,7 +123,6 @@ Góp hàng tháng: ${data.monthly_payment || ''}`;
     await sendPhotoField(files.cccd_back, `🪪 CCCD Sau - ${data.fullname}`);
     await sendPhotoField(files.portrait, `👤 Chân Dung - ${data.fullname}`);
 
-    // Đưa danh sách ID ảnh vào Map để gọi lại khi bấm nút
     pendingReview.set(rootMsgId, { 
       sourceMessageId: rootMsgId,
       photoIds: photoMsgIds 
@@ -143,22 +141,18 @@ bot.action(/btnmdm_(\d+)/, async (ctx) => {
   const reviewData = pendingReview.get(sourceMessageId);
 
   try {
-    // Forward tin nhắn Text
     await bot.telegram.forwardMessage(MDM_GROUP_ID, SOURCE_GROUP_ID, sourceMessageId);
 
-    // Forward các hình ảnh đi kèm
     if (reviewData && reviewData.photoIds) {
       for (const photoId of reviewData.photoIds) {
         await bot.telegram.forwardMessage(MDM_GROUP_ID, SOURCE_GROUP_ID, photoId);
-        // Tùy chọn: Xóa luôn ảnh ở nhóm duyệt cho đỡ rác
         await ctx.telegram.deleteMessage(SOURCE_GROUP_ID, photoId).catch(() => {});
       }
     }
 
-    // Sửa nội dung tin nhắn gốc thành Đã chuyển (sẽ tự mất nút bấm)
     await ctx.editMessageText('✅ Đã chuyển hồ sơ sang nhóm MDM.');
     await ctx.answerCbQuery('Đã chuyển sang MDM kèm ảnh!');
-    pendingReview.delete(sourceMessageId); // Dọn dẹp bộ nhớ
+    pendingReview.delete(sourceMessageId);
   } catch (err) {
     console.error('Lỗi MDM:', err.message);
     await ctx.answerCbQuery('Có lỗi xảy ra, xem terminal!');
@@ -171,10 +165,8 @@ bot.action(/btnicloud_(\d+)/, async (ctx) => {
   const reviewData = pendingReview.get(sourceMessageId);
 
   try {
-    // Forward tin nhắn Text
     await bot.telegram.forwardMessage(ICLOUD_GROUP_ID, SOURCE_GROUP_ID, sourceMessageId);
 
-    // Forward các hình ảnh đi kèm
     if (reviewData && reviewData.photoIds) {
       for (const photoId of reviewData.photoIds) {
         await bot.telegram.forwardMessage(ICLOUD_GROUP_ID, SOURCE_GROUP_ID, photoId);
@@ -197,14 +189,12 @@ bot.action(/btnreject_(\d+)/, async (ctx) => {
   const reviewData = pendingReview.get(sourceMessageId);
 
   try {
-    // Xóa các bức ảnh trong nhóm duyệt
     if (reviewData && reviewData.photoIds) {
       for (const photoId of reviewData.photoIds) {
         await ctx.telegram.deleteMessage(SOURCE_GROUP_ID, photoId).catch(() => {});
       }
     }
 
-    // Đổi text thành Đã từ chối (bỏ nút bấm)
     await ctx.editMessageText('❌ Đã TỪ CHỐI hồ sơ.');
     await ctx.answerCbQuery('Đã từ chối!');
     pendingReview.delete(sourceMessageId);
