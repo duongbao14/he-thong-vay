@@ -59,6 +59,7 @@ Seri máy : ${data.seri || ''}`;
       message += `
 Giá trị máy : ${data.device_value || ''} VNĐ
 Trả trước : ${data.prepaid_amount || ''} VNĐ
+Giữ CCCD khách : ${data.keep_cccd || ''}
 Tên cửa hàng : ${data.store_name || ''}
 Số điện thoại cửa hàng : ${data.store_phone || ''}
 Địa chỉ cửa hàng : ${data.store_address || ''}
@@ -68,13 +69,18 @@ Góp hàng tháng: ${data.monthly_payment || ''}`;
       // Nhánh xử lý tuỳ chọn Vay Tiêu Dùng
       if (data.vtd_type === 'icloud') {
         message += `
+Giữ CCCD khách : ${data.keep_cccd || ''}
 Máy chủ : ${data.server || ''}
 CTV : ${data.staff || ''}`;
       } else if (data.vtd_type === 'store') {
         message += `
+Giữ CCCD khách : ${data.keep_cccd || ''}
 Tên cửa hàng : ${data.store_name || ''}
 Số điện thoại cửa hàng : ${data.store_phone || ''}
 Địa chỉ cửa hàng : ${data.store_address || ''}`;
+      } else {
+        message += `
+Giữ CCCD khách : ${data.keep_cccd || ''}`;
       }
 
       message += `
