@@ -484,13 +484,11 @@
                     <div class="error-msg" id="error-imei2">⚠️ IMEI 2 phải chứa đúng 15 chữ số.</div>
                 </div>
 
-                <!-- Đã khôi phục trường Seri máy nhưng bỏ Javascript ép viết hoa tự động -->
                 <div>
                     <label>Seri máy:</label>
                     <input type="text" id="seri" class="req-field" placeholder="VÍ DỤ: F2L..." style="text-transform: uppercase;">
                 </div>
 
-                <!-- Phân đoạn động cho phần Trả góp -->
                 <div id="wrapper_device_value" style="display: none;">
                     <label>Giá trị máy mua (VNĐ):</label>
                     <input type="text" id="device_value" class="installment-field money-input" placeholder="Ví dụ: 25.000.000" oninput="calculateLoanAmount()">
@@ -500,7 +498,6 @@
                     <label>Số tiền trả trước (VNĐ):</label>
                     <input type="text" id="prepaid_amount" class="installment-field money-input" placeholder="Ví dụ: 10.000.000" oninput="calculateLoanAmount()">
                 </div>
-                <!-- End Phân đoạn động -->
                 
                 <div>
                     <label>Số tiền vay:</label>
@@ -534,7 +531,6 @@
                 <div class="form-section-title">THÔNG TIN CỬA HÀNG & HỆ THỐNG</div>
                 <div class="grid">
                     
-                    <!-- Lựa chọn hình thức khi Vay Tiêu Dùng -->
                     <div class="full-width" id="wrapper_vtd_type" style="display: none;">
                         <label style="color: var(--primary);">Hình thức Vay Tiêu Dùng:</label>
                         <select id="vtd_type" onchange="toggleVtdType()">
@@ -554,7 +550,6 @@
                         </select>
                     </div>
 
-                    <!-- Nhóm 1: Thông tin Cửa hàng -->
                     <div class="full-width group-store">
                         <label>Tên cửa hàng:</label>
                         <input type="text" id="store_name" class="store-field" placeholder="Tên cửa hàng">
@@ -569,7 +564,6 @@
                         <input type="text" id="store_address" class="store-field" placeholder="Chi tiết địa chỉ">
                     </div>
 
-                    <!-- Nhóm 2: Thông tin iCloud -->
                     <div class="full-width group-icloud" style="display: none;">
                         <label>Máy chủ (Không tự điền):</label>
                         <input type="text" id="server" class="icloud-field" placeholder="Máy chủ">
@@ -869,7 +863,6 @@
             adminElements.forEach(el => el.style.display = 'none');
             reqFields.forEach(el => el.setAttribute('required', 'required'));
             
-            // Xóa required cho các field không hiển thị ban đầu
             document.querySelectorAll('.icloud-field').forEach(el => el.removeAttribute('required'));
             if(currentCategory === 'Vay Tiêu Dùng') {
                 document.querySelectorAll('.store-field').forEach(el => el.removeAttribute('required'));
@@ -993,7 +986,6 @@
             vtdTypeSelect.classList.add('req-field');
             vtdTypeSelect.value = '';
             
-            // Ẩn cả 2 nhánh thông tin ban đầu, chờ chọn từ dropdown
             document.querySelectorAll('.group-store').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.store-field, .icloud-field').forEach(el => {
@@ -1015,7 +1007,6 @@
             wrapperVtdType.style.display = 'none';
             vtdTypeSelect.classList.remove('req-field');
             
-            // Trả góp: Tự động hiển thị phần cửa hàng, ẩn icloud
             document.querySelectorAll('.group-store').forEach(el => el.style.display = 'block');
             document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
             
@@ -1381,7 +1372,6 @@
                 document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
                 
-                // Trả giao diện về mặc định cho Vay Tiêu Dùng nếu đang ở đó
                 if(currentCategory === 'Vay Tiêu Dùng') {
                     document.querySelectorAll('.group-store').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.group-icloud').forEach(el => el.style.display = 'none');
