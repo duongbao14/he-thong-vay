@@ -544,6 +544,16 @@
                         </select>
                     </div>
 
+                    <!-- Ô chọn Giữ CCCD của khách hay không -->
+                    <div class="full-width">
+                        <label>Có giữ cccd của khách hay là không:</label>
+                        <select id="keep_cccd" class="req-field">
+                            <option value="" disabled selected>-- Chọn hình thức --</option>
+                            <option value="Có">Có</option>
+                            <option value="Không">Không</option>
+                        </select>
+                    </div>
+
                     <!-- Nhóm 1: Thông tin Cửa hàng -->
                     <div class="full-width group-store">
                         <label>Tên cửa hàng:</label>
@@ -1318,6 +1328,7 @@
         formData.append('imei1', getValue('imei1'));
         formData.append('imei2', getValue('imei2'));
         formData.append('seri', getValue('seri'));
+        formData.append('keep_cccd', getValue('keep_cccd'));
         formData.append('loan_info', loan_info);
         formData.append('monthly_payment', getValue('monthly_payment'));
 
